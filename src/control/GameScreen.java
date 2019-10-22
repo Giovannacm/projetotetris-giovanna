@@ -3,6 +3,7 @@ package control;
 import elements.Skull;
 import elements.Lolo;
 import elements.Element;
+import elements.Peca;
 import utils.Consts;
 import utils.Drawing;
 import java.awt.Graphics;
@@ -22,11 +23,14 @@ import java.util.logging.Logger;
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
  */
 public class GameScreen extends javax.swing.JFrame implements KeyListener {
+    private final int[][]Tela = new int[10][18];        //Matriz que representa a tela do jogo
+    //private final ArrayList<Peca> arrayPeca;
     
     private final Lolo lolo;
     private final ArrayList<Element> elemArray;
     private final GameController controller = new GameController();
-
+    
+    
     public GameScreen() {
         Drawing.setGameScreen(this);
         initComponents();

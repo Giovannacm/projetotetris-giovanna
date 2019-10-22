@@ -7,6 +7,7 @@ import java.io.File;
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
  */
 public class Consts {
+    public static final int VELOCIDADE = 1;     //Velocidade da peça no jogo
     public static final int CELL_SIZE = 30;
     public static final int NUM_CELLS = 20;
     
