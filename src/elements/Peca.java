@@ -12,9 +12,9 @@ import javafx.scene.shape.Rectangle;
  * @author giova
  */
 public class Peca {                 //Criando a Classe que repesenta os elementos do Tetris, através da biblioteca gráfica JavaFX
-    private Rectangle a, b, c, d;   //Cada objeto do tipo Rectangle é um componente da peça, dessa forma, todas as pessas possuem 4 retangulos, onde diferem apenas na disposição desses elementos
+    public Rectangle a, b, c, d;   //Cada objeto do tipo Rectangle é um componente da peça, dessa forma, todas as pessas possuem 4 retangulos, onde diferem apenas na disposição desses elementos
     private Color cor;              //Variável que armazena a cor da peça
-    private String nome;            //Nome da variável de acordo com o seu formato
+    public String nome;            //Nome da variável de acordo com o seu formato
     public static int[][] Tela = GameScreen.Tela;   //Acesso à tela do jogo para conseguir mudar a posição dos elementos
 
     public Peca(Rectangle a, Rectangle b, Rectangle c, Rectangle d, String nome) {  //Construtor para a peca

@@ -15,28 +15,11 @@ public class Main extends Application{
     private static Scene scene = new Scene(pane, 600, 800);
     @Override
     public void start(Stage primaryStage) {
-        Text faseTexto = new Text("Fase atual: ");
-        faseTexto.setX(400);
-        faseTexto.setY(80);
-        Text pontuacaoTexto = new Text("Pontuação atual: ");
-        pontuacaoTexto.setX(400);
-        pontuacaoTexto.setY(50);
-        pane.getChildren().addAll(faseTexto, pontuacaoTexto);      //Adicionando os textos na tela
-        primaryStage.setScene(scene);                              //Criando a tela (javaFX)
-	primaryStage.setTitle("TETRIS");
-	primaryStage.show();
+        GameScreen screen = new GameScreen();
+        screen.start(primaryStage);
     }
-    
     public static void main(String[] args) {
         launch(args);
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                GameScreen screen = new GameScreen();
-                screen.setVisible(true);
-                screen.createBufferStrategy(2);
-                screen.go();
-            }
-        });
     }
 }
 

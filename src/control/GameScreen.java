@@ -1,163 +1,57 @@
 package control;
 
-import elements.Skull;
-import elements.Lolo;
-import elements.Element;
 import elements.Peca;
-import utils.Consts;
-import utils.Drawing;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Arrays;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 /**
  * Projeto de POO 2019
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
  */
-public class GameScreen extends javax.swing.JFrame implements KeyListener {
+public class GameScreen extends Application {
+    private static Pane pane = new Pane();
+    private static Scene scene = new Scene(pane, 600, 800);
     public static int[][]Tela = new int[10][18];        //Matriz que representa a tela do jogo
-    //private final ArrayList<Peca> arrayPeca;
-    
-    private final Lolo lolo;
-    private final ArrayList<Element> elemArray;
-    private final GameController controller = new GameController();
-    
-    
-    public GameScreen() {
-        Drawing.setGameScreen(this);
-        initComponents();
-        
-        this.addKeyListener(this);   /*teclado*/
-        
-        /*Cria a janela do tamanho do tabuleiro + insets (bordas) da janela*/
-        this.setSize(Consts.NUM_CELLS * Consts.CELL_SIZE + getInsets().left + getInsets().right,
-                     Consts.NUM_CELLS * Consts.CELL_SIZE + getInsets().top + getInsets().bottom);
-
-        elemArray = new ArrayList<Element>();
-
-        /*Cria e adiciona elementos*/
-        lolo = new Lolo("lolo.png");
-        lolo.setPosition(0, 0);
-        this.addElement(lolo);
-        
-        Skull skull = new Skull("caveira.png");
-        skull.setPosition(9, 1);
-        this.addElement(skull);  
-    }
-    
-    public final void addElement(Element elem) {
-        elemArray.add(elem);
-    }
-    
-    public void removeElement(Element elem) {
-        elemArray.remove(elem);
-    }
     
     @Override
-    public void paint(Graphics gOld) {
-        Graphics g = getBufferStrategy().getDrawGraphics();
+    public void start(Stage primaryStage) {
+        //Texto para indicar a fase atual
+        Text faseTexto = new Text("Fase atual: ");
+        faseTexto.setStyle("-fx-font: 20 arial;");
+	faseTexto.setX(400);
+        faseTexto.setY(80);
         
-        /*Criamos um contexto grafico*/
-        Graphics g2 = g.create(getInsets().right, getInsets().top, getWidth() - getInsets().left, getHeight() - getInsets().bottom);
+        //Texto para indicar a pontuação atual
+        Text pontuacaoTexto = new Text("Pontuação atual: ");
+        pontuacaoTexto.setStyle("-fx-font: 20 arial;");
+        pontuacaoTexto.setX(400);
+        pontuacaoTexto.setY(50);
         
-        /* DESENHA CENARIO
-           Trocar essa parte por uma estrutura mais bem organizada
-           Utilizando a classe Stage
-        */
-        for (int i = 0; i < Consts.NUM_CELLS; i++) {
-            for (int j = 0; j < Consts.NUM_CELLS; j++) {
-                try {
-                    Image newImage = Toolkit.getDefaultToolkit().getImage(new java.io.File(".").getCanonicalPath() + Consts.IMG_PATH + "bricks.png");
-                    g2.drawImage(newImage,
-                            j * Consts.CELL_SIZE, i * Consts.CELL_SIZE, Consts.CELL_SIZE, Consts.CELL_SIZE, null);
-                    
-                } catch (IOException ex) {
-                    Logger.getLogger(GameScreen.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            }
-        }
+        //Linha para separar a área do jogo com os textos
+        Line linha = new Line(350, 0, 350, 800);
         
-        this.controller.drawAllElements(elemArray, g2);
-        this.controller.processAllElements(elemArray);
-        this.setTitle("-> Cell: " + lolo.getStringPosition());
+        //Adicionando os textos na tela
+        pane.getChildren().addAll(faseTexto, pontuacaoTexto, linha);
         
-        g.dispose();
-        g2.dispose();
-        if (!getBufferStrategy().contentsLost()) {
-            getBufferStrategy().show();
-        }
-    }
-    
-    public void go() {
-        TimerTask task = new TimerTask() {
-            
-            public void run() {
-                repaint();
-            }
-        };
-        Timer timer = new Timer();
-        timer.schedule(task, 0, Consts.DELAY_SCREEN_UPDATE);
-    }
-    
-    public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_UP) {
-            lolo.moveUp();
-        } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-            lolo.moveDown(); 
-        } else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-            lolo.moveLeft();
-        } else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-            lolo.moveRight();
-        }
-
+        //Criando a tela (javaFX)
+        primaryStage.setScene(scene);
+	primaryStage.setTitle("TETRIS");
         
-        //repaint(); /*invoca o paint imediatamente, sem aguardar o refresh*/
-    }
-    
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">                          
-    private void initComponents() {
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("SCC0604 - Pacman");
-        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        setLocation(new java.awt.Point(20, 20));
-        setResizable(false);
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 500, Short.MAX_VALUE)
-        );
-
-        pack();
-    }// </editor-fold>                        
-    // Variables declaration - do not modify                     
-    // End of variables declaration                   
-    
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-    
-    @Override
-    public void keyReleased(KeyEvent e) {
+        //Inicializando a tela/tabuleiro (matriz) do jogo com 0
+        for(int i=0 ; i<10 ; i++)
+            for(int j=0 ; j<18 ; j++)
+                Tela[i][j]=0;
+        
+        //Pegando a primeira peça do jogo e adicionando seus retangulos na tela do jogo
+        Peca primeiraPeca = GameController.proximaPeca();
+	pane.getChildren().addAll(primeiraPeca.a, primeiraPeca.b, primeiraPeca.c, primeiraPeca.d);
+        
+        //Exibindo tudo que foi adicionado anteriormente
+	primaryStage.show();
     }
 }

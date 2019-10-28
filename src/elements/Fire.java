@@ -24,7 +24,7 @@ public class Fire extends Element implements Serializable{
         countDelay++;
         if(countDelay == DELAY_MOVIMENT) {
             if(!this.moveRight())
-                Drawing.getGameScreen().removeElement(this);
+    //            Drawing.getGameScreen().removeElement(this);
             
             countDelay = 0;
         }

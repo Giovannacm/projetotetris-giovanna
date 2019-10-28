@@ -8,6 +8,12 @@ import java.io.File;
  */
 public class Consts {
     public static final int VELOCIDADE = 1;     //Velocidade da peça no jogo
+    public static final int TamanhoRec = 25;
+    public static int XMAX = TamanhoRec * 10;
+    public static int YMAX = TamanhoRec * 18;
+    
+    
+   //Constantes que já estavam no código do material
     public static final int CELL_SIZE = 30;
     public static final int NUM_CELLS = 20;
     
