@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
  */
 public class GameScreen extends javax.swing.JFrame implements KeyListener {
-    private final int[][]Tela = new int[10][18];        //Matriz que representa a tela do jogo
+    public static int[][]Tela = new int[10][18];        //Matriz que representa a tela do jogo
     //private final ArrayList<Peca> arrayPeca;
     
     private final Lolo lolo;
