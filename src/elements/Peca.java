@@ -15,7 +15,6 @@ public class Peca {                 //Criando a Classe que repesenta os elemento
     public Rectangle a, b, c, d;   //Cada objeto do tipo Rectangle é um componente da peça, dessa forma, todas as pessas possuem 4 retangulos, onde diferem apenas na disposição desses elementos
     private Color cor;              //Variável que armazena a cor da peça
     public String nome;            //Nome da variável de acordo com o seu formato
-    public static int[][] Tela = GameScreen.Tela;   //Acesso à tela do jogo para conseguir mudar a posição dos elementos
 
     public Peca(Rectangle a, Rectangle b, Rectangle c, Rectangle d, String nome) {  //Construtor para a peca
         this.a = a;
@@ -49,40 +48,5 @@ public class Peca {                 //Criando a Classe que repesenta os elemento
         this.b.setFill(this.cor);
         this.c.setFill(this.cor);
         this.d.setFill(this.cor);
-    }
-    /**
-     * Função responsável por mover a peça para a direita.
-     * Inicialmente é verificado se é possível mover cada retangulo para a direita, 
-     *      se for, é verificado se não há nenhuma peça nequela posição (o valor da
-     *      matriz naquela posição é 0), se for, o a posição de cada retângulo é mudada.
-     * @param peca 
-     */
-    public void moveDireita(Peca peca) 
-    {
-        //Mover a peça para a direita, implica em mover todos os retangulos pertencentes à ela por meio do incremento da posição x
-        if((peca.a.getX() + 1 < 18)&&(peca.b.getX() + 1 < 18)&&(peca.c.getX() + 1 < 18)&&(peca.d.getX() + 1 < 18))
-        {
-            if((Tela[(int)peca.a.getX() + 1][(int)peca.a.getY()] == 0)&&(Tela[(int)peca.b.getX() + 1][(int)peca.b.getY()] == 0)&&(Tela[(int)peca.c.getX() + 1][(int)peca.c.getY()] == 0)&&(Tela[(int)peca.d.getX() + 1][(int)peca.d.getY()] == 0))
-            {
-                peca.a.setX(peca.a.getX() + 1);
-		peca.b.setX(peca.b.getX() + 1);
-		peca.c.setX(peca.c.getX() + 1);
-		peca.d.setX(peca.d.getX() + 1);
-            }
-	}
-    }
-    public void moveEsquerda(Peca peca) 
-    {
-        //Mover a peça para a esquerda, implica em mover todos os retangulos pertencentes à ela por meio do decrementos da posição x
-        if((peca.a.getX() - 1 >= 0)&&(peca.b.getX() - 1 >= 0)&&(peca.c.getX() - 1 >= 0)&&(peca.d.getX() - 1 >= 0))
-        {
-            if((Tela[(int)peca.a.getX() - 1][(int)peca.a.getY()] == 0)&&(Tela[(int)peca.b.getX() - 1][(int)peca.b.getY()] == 0)&&(Tela[(int)peca.c.getX() - 1][(int)peca.c.getY()] == 0)&&(Tela[(int)peca.d.getX() - 1][(int)peca.d.getY()] == 0))
-            {
-                peca.a.setX(peca.a.getX() - 1);
-		peca.b.setX(peca.b.getX() - 1);
-		peca.c.setX(peca.c.getX() - 1);
-		peca.d.setX(peca.d.getX() - 1);
-            }
-	}
     }
 }

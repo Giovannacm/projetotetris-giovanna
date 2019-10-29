@@ -8,9 +8,9 @@ import java.io.File;
  */
 public class Consts {
     public static final int VELOCIDADE = 1;     //Velocidade da peça no jogo
-    public static final int TamanhoRec = 25;
-    public static int XMAX = TamanhoRec * 10;
-    public static int YMAX = TamanhoRec * 18;
+    public static final int TamRec = 30;
+    public static final int XMAX = TamRec * 10;
+    public static final int YMAX = TamRec * 18;
     
     
    //Constantes que já estavam no código do material
