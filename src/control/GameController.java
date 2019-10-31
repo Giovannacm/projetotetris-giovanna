@@ -124,9 +124,9 @@ public class GameController {
                     case LEFT:
                         moveEsquerda(peca);
                         break;
-                    //case DOWN:
-                    //    moveBaixo(peca);
-                    //break;
+                    case DOWN:
+                        moveBaixo(peca);
+                    break;
                     //case SPACE:
                     //    rotaciona(peca);
                     //    break;
@@ -138,7 +138,7 @@ public class GameController {
     
     /**
      * Função responsável por mover a peça para a direita.
-     * Inicialmente é verificado se é possível mover cada retangulo para a direita, 
+     * Inicialmente é verificado se é possível mover cada retangulo para a direita (verificação por meio da posição X + TamRec), 
      *      se for, é verificado se não há nenhuma peça nequela posição (o valor da
      *      matriz naquela posição é 0), se for, o a posição de cada retângulo é mudada.
      * @param peca 
@@ -166,15 +166,15 @@ public class GameController {
     
     /**
      * Função responsável por mover a peça para a esquerda.
-     * Inicialmente é verificado se é possível mover cada retangulo para a esquerda, 
+     * Inicialmente é verificado se é possível mover cada retangulo para a esquerda (verificação por meio da posição X - TamRec), 
      *      se for, é verificado se não há nenhuma peça nequela posição (o valor da
      *      matriz naquela posição é 0), se for, o a posição de cada retângulo é mudada.
      * @param peca 
      */
     public static void moveEsquerda(Peca peca) 
-    {
+    { 
         //Mover a peça para a esquerda, implica em mover todos os retangulos pertencentes à ela por meio do decrementos da posição x
-        if(movimentoValidoE(peca.a) && movimentoValidoE(peca.b)&&movimentoValidoE(peca.c)&&movimentoValidoE(peca.d))
+        if(movimentoValidoE(peca.a) && movimentoValidoE(peca.b) && movimentoValidoE(peca.c) && movimentoValidoE(peca.d))
         {
             peca.a.setX(peca.a.getX() - TamRec);
             peca.b.setX(peca.b.getX() - TamRec);
@@ -193,22 +193,88 @@ public class GameController {
      
     
     /**
-     * 
+     * Função responsável por mover a peça para baixo.
+     * Inicialmente é verificado se é possível mover cada retangulo para baixo (verificação por meio da posição Y + TamRec), 
+     *      se for, é verificado se não há nenhuma peça nequela posição (o valor da
+     *      matriz naquela posição é 0), se for, o a posição de cada retângulo é mudada.
      * @param peca 
      */
     private static void moveBaixo(Peca peca) 
     {
-        
+        if(movimentoValidoB(peca.a) && movimentoValidoB(peca.b) && movimentoValidoB(peca.c) && movimentoValidoB(peca.d))
+        {
+            peca.a.setY(peca.a.getY() + TamRec);
+            peca.b.setY(peca.b.getY() + TamRec);
+            peca.c.setY(peca.c.getY() + TamRec);
+            peca.d.setY(peca.d.getY() + TamRec);
+	}
+    }
+    public static boolean movimentoValidoB(Rectangle r)
+    {
+        if((r.getY() + TamRec < YMAX) && (Tela[(int)r.getX()/TamRec][(int)r.getY()/TamRec + 1] == 0))
+        {
+            return true;
+        }
+        return false;
     }
     
+    /**
+     * Função responsável por fazer a peça cair até que a base seja atingida.
+     * Inicialmente é verificado se algum retangulo já cregou na base, ou esta em cima de alguma peça (vê se na matriz, a posição
+     *      a frente de Y (Y + 1) já está com 1).
+     * Caso essa situação seja verdadeira (pelo menos 1 retangulo da peça chegou na base ou em cima de alguma peça), a respectiva posição 
+     * na matriz recebe 1, pois essa peça ficou naquele lugar.
+     * Caso contrátrio, faz apenas a peça descer por meio da função moveBaixo.
+     * @param peca 
+     */
+    public static void fazerCair(Peca peca)
+    {
+        if(chegouNaBase(peca.a) || chegouNaBase(peca.b) || chegouNaBase(peca.c) || chegouNaBase(peca.d)) 
+        {
+            Tela[(int) peca.a.getX() / TamRec][(int) peca.a.getY() / TamRec] = 1;
+            Tela[(int) peca.b.getX() / TamRec][(int) peca.b.getY() / TamRec] = 1;
+            Tela[(int) peca.c.getX() / TamRec][(int) peca.c.getY() / TamRec] = 1;
+            Tela[(int) peca.d.getX() / TamRec][(int) peca.d.getY() / TamRec] = 1;
+	}
+        else
+            moveBaixo(peca);
+    }
+    public static boolean chegouNaBase(Rectangle r)
+    {
+        if((r.getY() + TamRec == YMAX) && (Tela[(int)r.getX()/TamRec][(int)r.getY()/TamRec + 1] == 1))
+        {
+            return true;
+        }
+        return false;
+    }
     
     /**
      * 
      * @param peca 
      */
-    private static void rotaciona(Peca peca)
+    /*private static void rotaciona(Peca peca)
     {
         
+    }*/
+    
+    
+    /**
+     * Função responsável por percorrer a matriz (tela) para encontrar onde está a peça mais alta.
+     * Dessa forma, é possível ter controle sobre o final do jogo (topo==0), uma vez que se uma peça atingir o topo da tela,
+     * o jogo termina.
+     * @return 
+     */
+    public static int topo()
+    {
+        for(int i=0 ; i<10 ; i++)
+        {
+            for(int j=0 ; j<18 ; j++)
+            {
+                if(Tela[i][j]==1)
+                    return(j);
+            }
+        }
+        return(-1);
     }
 }
     /*

@@ -18,7 +18,7 @@ import javafx.stage.Stage;
  */
 public class GameScreen extends Application {
     private static Pane pane = new Pane();
-    private static Scene scene = new Scene(pane, 550, 800);
+    private static Scene scene = new Scene(pane, 300 + 250, 540);
     public static int[][]Tela = new int[10][18];        //Matriz que representa a tela do jogo
     public static int topo = 0;
     public static int pontuacao = 0;
@@ -27,14 +27,14 @@ public class GameScreen extends Application {
         //Texto para indicar a fase atual
         Text faseTexto = new Text("Fase atual: ");
         faseTexto.setStyle("-fx-font: 20 arial;");
-	faseTexto.setX(320);
-        faseTexto.setY(80);
+	faseTexto.setX(310);
+        faseTexto.setY(20);
         
         //Texto para indicar a pontuação atual
         Text pontuacaoTexto = new Text("Pontuação atual: ");
         pontuacaoTexto.setStyle("-fx-font: 20 arial;");
-        pontuacaoTexto.setX(320);
-        pontuacaoTexto.setY(50);
+        pontuacaoTexto.setX(310);
+        pontuacaoTexto.setY(70);
         
         //Linha para separar a área do jogo com os textos
         Line linha = new Line(300, 0, 300, 800);
