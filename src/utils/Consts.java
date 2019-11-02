@@ -7,7 +7,7 @@ import java.io.File;
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
  */
 public class Consts {
-    public static final int VELOCIDADE = 1;     //Velocidade da peça no jogo
+    public static final int Gravidade = 1;     //Velocidade da peça no jogo
     public static final int TamRec = 30;
     public static final int XMAX = TamRec * 10;
     public static final int YMAX = TamRec * 18;

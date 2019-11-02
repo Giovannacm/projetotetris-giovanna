@@ -199,7 +199,7 @@ public class GameController {
      *      matriz naquela posição é 0), se for, o a posição de cada retângulo é mudada.
      * @param peca 
      */
-    private static void moveBaixo(Peca peca) 
+    public static void moveBaixo(Peca peca) 
     {
         if(movimentoValidoB(peca.a) && movimentoValidoB(peca.b) && movimentoValidoB(peca.c) && movimentoValidoB(peca.d))
         {
@@ -227,7 +227,7 @@ public class GameController {
      * Caso contrátrio, faz apenas a peça descer por meio da função moveBaixo.
      * @param peca 
      */
-    public static void fazerCair(Peca peca)
+    public static boolean fazerCair(Peca peca)
     {
         if(chegouNaBase(peca.a) || chegouNaBase(peca.b) || chegouNaBase(peca.c) || chegouNaBase(peca.d)) 
         {
@@ -235,13 +235,14 @@ public class GameController {
             Tela[(int) peca.b.getX() / TamRec][(int) peca.b.getY() / TamRec] = 1;
             Tela[(int) peca.c.getX() / TamRec][(int) peca.c.getY() / TamRec] = 1;
             Tela[(int) peca.d.getX() / TamRec][(int) peca.d.getY() / TamRec] = 1;
+            return false;
 	}
-        else
-            moveBaixo(peca);
+        moveBaixo(peca);
+        return true;
     }
     public static boolean chegouNaBase(Rectangle r)
     {
-        if((r.getY() + TamRec == YMAX) && (Tela[(int)r.getX()/TamRec][(int)r.getY()/TamRec + 1] == 1))
+        if((r.getY() + TamRec == YMAX) || (Tela[(int)r.getX()/TamRec][((int)r.getY()/TamRec) + 1] == 1))
         {
             return true;
         }
