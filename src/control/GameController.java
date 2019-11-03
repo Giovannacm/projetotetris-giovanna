@@ -1,15 +1,16 @@
 package control;
 
-import elements.Element;
-import elements.Lolo;
 import elements.Peca;
 import utils.Consts;
-import java.awt.Graphics;
-import java.util.ArrayList;
 import javafx.event.EventHandler;
+import javafx.scene.paint.Color;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 /**
  * Projeto de POO 2019
@@ -20,8 +21,66 @@ public class GameController {
     private static int XMAX = Consts.XMAX;
     private static int YMAX = Consts.YMAX;
     private static int TamRec = Consts.TamRec;
-    private static int[][]Tela = GameScreen.Tela;
-     
+    private static int[][]Tela = GameScreen.getTela();
+    private static Pane pane = GameScreen.getPane();
+    private static Scene scene = GameScreen.getScene();
+    
+    
+    /**
+     * Função responsável por desenhar os elementos do cenário.
+     * Além de colocar os textos de pontuação e fase atual, adiciona as linhas para desenhar a matriz.
+     * @param primaryStage 
+     */
+    public static void desenhaCenario(Stage primaryStage)
+    {
+        //Texto para indicar a fase atual
+        Text faseTexto = new Text("Fase atual: ");
+        faseTexto.setStyle("-fx-font: 20 arial;");
+	faseTexto.setX(310);
+        faseTexto.setY(20);
+        
+        //Texto para indicar a pontuação atual
+        Text pontuacaoTexto = new Text("Pontuação atual: ");
+        pontuacaoTexto.setStyle("-fx-font: 20 arial;");
+        pontuacaoTexto.setX(310);
+        pontuacaoTexto.setY(70);
+        
+        //Texto para indicar a pontuação atual
+        Text proximaPeca = new Text("Próxima peça: ");
+        proximaPeca.setStyle("-fx-font: 20 arial;");
+        proximaPeca.setX(310);
+        proximaPeca.setY(120);
+               
+        //Adicionando os textos na tela
+        pane.getChildren().addAll(faseTexto, pontuacaoTexto);
+        
+        desenhaLinhas(primaryStage);
+        
+        //Criando a tela (javaFX)
+        primaryStage.setScene(scene);
+	primaryStage.setTitle("TETRIS - Giovanna");
+    }
+    public static void desenhaLinhas(Stage primaryStage)
+    {
+        int i;
+        Line linha;
+        for(i=0 ; i<Consts.LMatriz ; i++)
+        {
+            linha = new Line(TamRec*(i), 0, TamRec*(i), YMAX);
+            linha.setStroke(Color.GHOSTWHITE);
+            pane.getChildren().addAll(linha);
+        }
+        linha = new Line(TamRec*(i), 0, TamRec*(i), YMAX);
+        linha.setStroke(Color.BLACK);
+        pane.getChildren().addAll(linha);
+        for(i=0 ; i<=Consts.CMatriz ; i++)
+        {
+            linha = new Line(0, TamRec*(i), XMAX, TamRec*(i));
+            linha.setStroke(Color.GHOSTWHITE);
+            pane.getChildren().addAll(linha);
+        }
+    }
+    
     
     /**
      * Função responsável por gerar uma peça aleatória (de acordo com o valorAreatorio) e colocá-la na parte de cima da tela centrada no meio.
@@ -278,39 +337,3 @@ public class GameController {
         return(-1);
     }
 }
-    /*
-    public void drawAllElements(ArrayList<Element> elemArray, Graphics g){
-        for(int i=0; i<elemArray.size(); i++){
-            elemArray.get(i).autoDraw(g);
-        }
-    }
-    public void processAllElements(ArrayList<Element> e){
-        if(e.isEmpty())
-            return;
-        
-        Lolo lLolo = (Lolo)e.get(0);
-        if (!isValidPosition(e, lLolo)) {
-            lLolo.backToLastPosition();
-            
-            return;
-        }
-        
-        Element eTemp;
-        for(int i = 1; i < e.size(); i++){
-            eTemp = e.get(i);
-            if(lLolo.overlap(eTemp))
-                if(eTemp.isMortal())
-                    e.remove(eTemp);
-        }
-    }
-    public boolean isValidPosition(ArrayList<Element> elemArray, Element elem){
-        Element elemAux;
-        for(int i = 1; i < elemArray.size(); i++){
-            elemAux = elemArray.get(i);            
-            if(!elemAux.isTransposable())
-                if(elemAux.overlap(elem))
-                    return false;
-        }        
-        return true;
-    }
-}*/

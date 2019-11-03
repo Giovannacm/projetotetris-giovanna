@@ -6,6 +6,7 @@ import java.util.TimerTask;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
@@ -17,47 +18,50 @@ import utils.Consts;
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
  */
 public class GameScreen extends Application {
-    private static Pane pane = new Pane();
-    private static Scene scene = new Scene(pane, 300 + 250, 540);
+    private static GameScreen Instance;
+    private static Pane pane;
+    private static Scene scene;
     private static Peca peca, proxPeca;
-    private static int Gravidade = Consts.Gravidade;
-    public static int[][]Tela = new int[10][18];        //Matriz que representa a tela do jogo
-    public static int topo = 0;
-    public static int pontuacao = 0;
+    private static int Gravidade;
+    private static int[][]Tela;        //Matriz que representa a tela do jogo
+    private static int topo;
+    private static int pontuacao;
+    
+    /**
+     * Construtor sem parametros para a classe GameScreen.
+     * O construtor é privado por conta da implementação do padrão Singleton (garante que uma unica instancia seja feita).
+     */
+    private GameScreen()
+    {
+        pane = new Pane();
+        scene = new Scene(pane, Consts.XMAX + 250, Consts.YMAX);
+        //pane.setStyle("-fx-background-color: Black");
+        Gravidade = Consts.Gravidade;
+        Tela = new int[Consts.LMatriz][Consts.CMatriz];
+        topo = 0;
+        pontuacao = 0;
+    }
+    
+    
+    /**
+     * Função getInstance para implementação do padrão Singleton.
+     * @return a única instancia de GameScreen
+     */
+    public static GameScreen getInstance(){
+        if(Instance==null){
+            Instance = new GameScreen();
+        }
+        return(Instance);
+    }
+    
     @Override
     public void start(Stage primaryStage) {
-        //Texto para indicar a fase atual
-        Text faseTexto = new Text("Fase atual: ");
-        faseTexto.setStyle("-fx-font: 20 arial;");
-	faseTexto.setX(310);
-        faseTexto.setY(20);
-        
-        //Texto para indicar a pontuação atual
-        Text pontuacaoTexto = new Text("Pontuação atual: ");
-        pontuacaoTexto.setStyle("-fx-font: 20 arial;");
-        pontuacaoTexto.setX(310);
-        pontuacaoTexto.setY(70);
-        
-        //Texto para indicar a pontuação atual
-        Text proximaPeca = new Text("Próxima peça: ");
-        proximaPeca.setStyle("-fx-font: 20 arial;");
-        proximaPeca.setX(310);
-        proximaPeca.setY(120);
-        
-        //Linha para separar a área do jogo com os textos
-        Line linha = new Line(300, 0, 300, 800);
-        
-        //Adicionando os textos na tela
-        pane.getChildren().addAll(faseTexto, pontuacaoTexto, linha);
-        
-        //Criando a tela (javaFX)
-        primaryStage.setScene(scene);
-	primaryStage.setTitle("TETRIS - Giovanna");
-        
         //Inicializando a tela/tabuleiro (matriz) do jogo com 0
-        for(int i=0 ; i<10 ; i++)
-            for(int j=0 ; j<18 ; j++)
+        for(int i=0 ; i<Consts.LMatriz ; i++)
+            for(int j=0 ; j<Consts.CMatriz ; j++)
                 Tela[i][j]=0;
+        
+        GameController.desenhaCenario(primaryStage);
         
         //Exibindo tudo que foi adicionado anteriormente
         primaryStage.show();
@@ -76,6 +80,7 @@ public class GameScreen extends Application {
                 {
                     public void run() 
                     {
+                        //imprimeMatriz();
                         if(GameController.fazerCair(peca)==false)       //Se não for mais possível fazer a peça cair, outra peça é criada
                         {
                             peca = proxPeca;                            //Pegando a próxima peça
@@ -90,8 +95,80 @@ public class GameScreen extends Application {
 	fall.schedule(task, 0, 600*Gravidade);  //Definindo o período de execução
                 
     }
+    
+    public static void imprimeMatriz()
+    {
+        System.out.println("");
+        for(int i=0 ; i<Consts.LMatriz ; i++)
+        {
+            System.out.println("");
+            for(int j=0 ; j<Consts.CMatriz ; j++)
+                System.out.print(" " + Tela[i][j]);
+        }
+    }
+
+    //Métodos get e set para os atributos de GameScreen. (São utilizados em GameController para ter acesso aos atributos de GameScreen)
+    public static Pane getPane() {
+        return pane;
+    }
+
+    public static void setPane(Pane pane) {
+        GameScreen.pane = pane;
+    }
 
     public static Scene getScene() {
         return scene;
+    }
+
+    public static void setScene(Scene scene) {
+        GameScreen.scene = scene;
+    }
+
+    public static Peca getPeca() {
+        return peca;
+    }
+
+    public static void setPeca(Peca peca) {
+        GameScreen.peca = peca;
+    }
+
+    public static Peca getProxPeca() {
+        return proxPeca;
+    }
+
+    public static void setProxPeca(Peca proxPeca) {
+        GameScreen.proxPeca = proxPeca;
+    }
+
+    public static int getGravidade() {
+        return Gravidade;
+    }
+
+    public static void setGravidade(int Gravidade) {
+        GameScreen.Gravidade = Gravidade;
+    }
+
+    public static int[][] getTela() {
+        return Tela;
+    }
+
+    public static void setTela(int[][] Tela) {
+        GameScreen.Tela = Tela;
+    }
+
+    public static int getTopo() {
+        return topo;
+    }
+
+    public static void setTopo(int topo) {
+        GameScreen.topo = topo;
+    }
+
+    public static int getPontuacao() {
+        return pontuacao;
+    }
+
+    public static void setPontuacao(int pontuacao) {
+        GameScreen.pontuacao = pontuacao;
     }
 }
