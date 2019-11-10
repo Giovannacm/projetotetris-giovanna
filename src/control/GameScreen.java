@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -22,10 +23,9 @@ public class GameScreen extends Application {
     private static Pane pane;
     private static Scene scene;
     private static Peca peca, proxPeca;
-    private static int Gravidade;
+    private static double Gravidade;
     private static int[][]Tela;        //Matriz que representa a tela do jogo
     private static int topo;
-    private static int pontuacao;
     
     /**
      * Construtor sem parametros para a classe GameScreen.
@@ -39,7 +39,6 @@ public class GameScreen extends Application {
         Gravidade = Consts.Gravidade;
         Tela = new int[Consts.LMatriz][Consts.CMatriz];
         topo = 0;
-        pontuacao = 0;
     }
     
     
@@ -80,24 +79,30 @@ public class GameScreen extends Application {
                 {
                     public void run() 
                     {
-                        //imprimeMatriz();
-                        if(GameController.fazerCair(peca)==false)       //Se não for mais possível fazer a peça cair, outra peça é criada
+                        imprimeMatriz();
+                        topo=GameController.topo();
+                        //System.out.println("Topo: "+topo);
+                        //System.out.println("Completou "+GameController.completouLinha()+" linhas");
+                        if(GameController.fazerCair(peca)==false&&topo!=0)       //Se não for mais possível fazer a peça cair, outra peça é criada
                         {
                             peca = proxPeca;                            //Pegando a próxima peça
                             pane.getChildren().addAll(peca.a, peca.b, peca.c, peca.d);
                             GameController.moverTeclaPressionada(peca);
                             proxPeca = GameController.proximaPeca();    //Guardando a proxima peça para a próxima iteração
                         }
+                        if(GameController.getPontuacao()==1000)
+                            Gravidade=Gravidade*1.30;                   //Se chegou em 100 prontos, a velociade aumenta em 30%
                     }
 		});
             }
 	};
-	fall.schedule(task, 0, 600*Gravidade);  //Definindo o período de execução
+	fall.schedule(task, 0, 600*((int)Gravidade));  //Definindo o período de execução
                 
     }
     
     public static void imprimeMatriz()
     {
+        System.out.println("");
         System.out.println("");
         for(int i=0 ; i<Consts.LMatriz ; i++)
         {
@@ -140,7 +145,7 @@ public class GameScreen extends Application {
         GameScreen.proxPeca = proxPeca;
     }
 
-    public static int getGravidade() {
+    public static double getGravidade() {
         return Gravidade;
     }
 
@@ -164,11 +169,4 @@ public class GameScreen extends Application {
         GameScreen.topo = topo;
     }
 
-    public static int getPontuacao() {
-        return pontuacao;
-    }
-
-    public static void setPontuacao(int pontuacao) {
-        GameScreen.pontuacao = pontuacao;
-    }
 }

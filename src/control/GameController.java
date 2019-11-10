@@ -24,7 +24,8 @@ public class GameController {
     private static int[][]Tela = GameScreen.getTela();
     private static Pane pane = GameScreen.getPane();
     private static Scene scene = GameScreen.getScene();
-    
+    private static int pontuacao = 0;
+    private static Text pontuacaoTexto = new Text("Pontuação atual: " + Integer.toString(pontuacao));
     
     /**
      * Função responsável por desenhar os elementos do cenário.
@@ -40,7 +41,6 @@ public class GameController {
         faseTexto.setY(20);
         
         //Texto para indicar a pontuação atual
-        Text pontuacaoTexto = new Text("Pontuação atual: ");
         pontuacaoTexto.setStyle("-fx-font: 20 arial;");
         pontuacaoTexto.setX(310);
         pontuacaoTexto.setY(70);
@@ -64,7 +64,7 @@ public class GameController {
     {
         int i;
         Line linha;
-        for(i=0 ; i<Consts.LMatriz ; i++)
+        for(i=0 ; i<Consts.CMatriz ; i++)
         {
             linha = new Line(TamRec*(i), 0, TamRec*(i), YMAX);
             linha.setStroke(Color.GHOSTWHITE);
@@ -73,7 +73,7 @@ public class GameController {
         linha = new Line(TamRec*(i), 0, TamRec*(i), YMAX);
         linha.setStroke(Color.BLACK);
         pane.getChildren().addAll(linha);
-        for(i=0 ; i<=Consts.CMatriz ; i++)
+        for(i=0 ; i<=Consts.LMatriz ; i++)
         {
             linha = new Line(0, TamRec*(i), XMAX, TamRec*(i));
             linha.setStroke(Color.GHOSTWHITE);
@@ -215,7 +215,7 @@ public class GameController {
     }
     public static boolean movimentoValidoD(Rectangle r)
     {
-        if((r.getX() + TamRec <= XMAX - TamRec)&&((Tela[(int)r.getX()/TamRec + 1][(int)r.getY()/TamRec] == 0)))
+        if((r.getX() + TamRec <= XMAX - TamRec)&&((Tela[(int)r.getY()/TamRec][(int)r.getX()/TamRec + 1] == 0)))
         {
             return true;
         }
@@ -243,7 +243,7 @@ public class GameController {
     }
     public static boolean movimentoValidoE(Rectangle r)
     {
-        if((r.getX() - TamRec >= 0)&&(Tela[(int)r.getX()/TamRec - 1][(int)r.getY()/TamRec] == 0))
+        if((r.getX() - TamRec >= 0)&&(Tela[(int)r.getY()/TamRec][(int)r.getX()/TamRec - 1] == 0))
         {
             return true;
         }
@@ -266,11 +266,12 @@ public class GameController {
             peca.b.setY(peca.b.getY() + TamRec);
             peca.c.setY(peca.c.getY() + TamRec);
             peca.d.setY(peca.d.getY() + TamRec);
+            pontuacaoTexto.setText("Pontuação atual: " + Integer.toString(pontuacao++));
 	}
     }
     public static boolean movimentoValidoB(Rectangle r)
     {
-        if((r.getY() + TamRec < YMAX) && (Tela[(int)r.getX()/TamRec][(int)r.getY()/TamRec + 1] == 0))
+        if((r.getY() + TamRec < YMAX) && (Tela[(int)r.getY()/TamRec + 1][(int)r.getX()/TamRec] == 0))
         {
             return true;
         }
@@ -290,10 +291,10 @@ public class GameController {
     {
         if(chegouNaBase(peca.a) || chegouNaBase(peca.b) || chegouNaBase(peca.c) || chegouNaBase(peca.d)) 
         {
-            Tela[(int) peca.a.getX() / TamRec][(int) peca.a.getY() / TamRec] = 1;
-            Tela[(int) peca.b.getX() / TamRec][(int) peca.b.getY() / TamRec] = 1;
-            Tela[(int) peca.c.getX() / TamRec][(int) peca.c.getY() / TamRec] = 1;
-            Tela[(int) peca.d.getX() / TamRec][(int) peca.d.getY() / TamRec] = 1;
+            Tela[(int) peca.a.getY() / TamRec][(int) peca.a.getX() / TamRec] = 1;
+            Tela[(int) peca.b.getY() / TamRec][(int) peca.b.getX() / TamRec] = 1;
+            Tela[(int) peca.c.getY() / TamRec][(int) peca.c.getX() / TamRec] = 1;
+            Tela[(int) peca.d.getY() / TamRec][(int) peca.d.getX() / TamRec] = 1;
             return false;
 	}
         moveBaixo(peca);
@@ -301,7 +302,7 @@ public class GameController {
     }
     public static boolean chegouNaBase(Rectangle r)
     {
-        if((r.getY() + TamRec == YMAX) || (Tela[(int)r.getX()/TamRec][((int)r.getY()/TamRec) + 1] == 1))
+        if((r.getY() + TamRec == YMAX) || (Tela[((int)r.getY()/TamRec) + 1][(int)r.getX()/TamRec] == 1))
         {
             return true;
         }
@@ -322,18 +323,48 @@ public class GameController {
      * Função responsável por percorrer a matriz (tela) para encontrar onde está a peça mais alta.
      * Dessa forma, é possível ter controle sobre o final do jogo (topo==0), uma vez que se uma peça atingir o topo da tela,
      * o jogo termina.
-     * @return 
+     * @return valor do "topo"
      */
     public static int topo()
     {
-        for(int i=0 ; i<10 ; i++)
+        for(int i=0 ; i<Consts.LMatriz ; i++)
         {
-            for(int j=0 ; j<18 ; j++)
+            for(int j=0 ; j<Consts.CMatriz ; j++)
             {
                 if(Tela[i][j]==1)
-                    return(j);
+                {
+                    return(i);
+                }
             }
         }
         return(-1);
     }
+    
+    /**
+     * Função responsável por percorrer a matriz e determinar se foi completado alguma linha (todas as posições dessa linha possuem valor 1).
+     * Além disso, de acordo com o número de linhas completadas, a pontuação aumenta.
+     * @return número de linhas completadas.
+     */
+    public static int completouLinha()
+    {
+        int i, j, linha=0;
+        for(i=0 ; i<Consts.LMatriz ; i++)
+        {
+            for(j=0 ; j<Consts.CMatriz && Tela[i][j]==1 ; j++);
+            if(j==Consts.CMatriz)   //Tem uma linha com 1
+                    linha++;
+        }
+        if(linha==1)        //Completou uma linha, então adiciona 50 pontos
+            pontuacao+=50;
+        else if(linha==2)   //Completou duas linha, então adiciona 200 pontos
+            pontuacao+=200;
+        else if(linha==3)   //Completou tres linha, então adiciona 800 pontos
+            pontuacao+=800;
+        return(linha);       //Retorna a quantidade de linhas que completou (se não completou, linha=0; 
+    }
+
+    public static int getPontuacao() {
+        return pontuacao;
+    }
+
 }
