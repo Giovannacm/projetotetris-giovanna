@@ -1,8 +1,11 @@
 package control;
 
+import elements.Componente;
 import elements.Peca;
+import java.util.ArrayList;
 import utils.Consts;
 import javafx.event.EventHandler;
+import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
@@ -21,7 +24,7 @@ public class GameController {
     private static int XMAX = Consts.XMAX;
     private static int YMAX = Consts.YMAX;
     private static int TamRec = Consts.TamRec;
-    private static int[][]Tela = GameScreen.getTela();
+    private static Componente[][]Tela = GameScreen.getTela();
     private static Pane pane = GameScreen.getPane();
     private static Scene scene = GameScreen.getScene();
     private static int pontuacao = 0;
@@ -92,10 +95,10 @@ public class GameController {
     {        
         int valorAleatorio = (int) (Math.random() * 6);     //Pegando um valor aleatório (0 à 6) para determinar qual das 7 peça serão colocadas no jogo
 	String nome = "";
-	Rectangle a = new Rectangle(TamRec-1, TamRec-1);
-        Rectangle b = new Rectangle(TamRec-1, TamRec-1); 
-        Rectangle c = new Rectangle(TamRec-1, TamRec-1);
-        Rectangle d = new Rectangle(TamRec-1, TamRec-1);
+	Componente a = new Componente(TamRec-1, TamRec-1, false);
+        Componente b = new Componente(TamRec-1, TamRec-1, false);
+        Componente c = new Componente(TamRec-1, TamRec-1, false);
+        Componente d = new Componente(TamRec-1, TamRec-1, false);
         switch(valorAleatorio)
         {
             case(0):
@@ -213,9 +216,9 @@ public class GameController {
             peca.d.setX(peca.d.getX() + TamRec);
         }
     }
-    public static boolean movimentoValidoD(Rectangle r)
+    public static boolean movimentoValidoD(Componente r)
     {
-        if((r.getX() + TamRec <= XMAX - TamRec)&&((Tela[(int)r.getY()/TamRec][(int)r.getX()/TamRec + 1] == 0)))
+        if((r.getX() + TamRec <= XMAX - TamRec)&&((Tela[r.getY()/TamRec][r.getX()/TamRec + 1] == null)))
         {
             return true;
         }
@@ -241,9 +244,9 @@ public class GameController {
             peca.d.setX(peca.d.getX() - TamRec);
         }
     }
-    public static boolean movimentoValidoE(Rectangle r)
+    public static boolean movimentoValidoE(Componente r)
     {
-        if((r.getX() - TamRec >= 0)&&(Tela[(int)r.getY()/TamRec][(int)r.getX()/TamRec - 1] == 0))
+        if((r.getX() - TamRec >= 0)&&(Tela[r.getY()/TamRec][r.getX()/TamRec - 1] == null))
         {
             return true;
         }
@@ -269,14 +272,15 @@ public class GameController {
             pontuacaoTexto.setText("Pontuação atual: " + Integer.toString(pontuacao++));
 	}
     }
-    public static boolean movimentoValidoB(Rectangle r)
+    public static boolean movimentoValidoB(Componente r)
     {
-        if((r.getY() + TamRec < YMAX) && (Tela[(int)r.getY()/TamRec + 1][(int)r.getX()/TamRec] == 0))
+        if((r.getY() + TamRec < YMAX) && (Tela[r.getY()/TamRec + 1][r.getX()/TamRec] == null))
         {
             return true;
         }
         return false;
     }
+    
     
     /**
      * Função responsável por fazer a peça cair até que a base seja atingida.
@@ -291,23 +295,24 @@ public class GameController {
     {
         if(chegouNaBase(peca.a) || chegouNaBase(peca.b) || chegouNaBase(peca.c) || chegouNaBase(peca.d)) 
         {
-            Tela[(int) peca.a.getY() / TamRec][(int) peca.a.getX() / TamRec] = 1;
-            Tela[(int) peca.b.getY() / TamRec][(int) peca.b.getX() / TamRec] = 1;
-            Tela[(int) peca.c.getY() / TamRec][(int) peca.c.getX() / TamRec] = 1;
-            Tela[(int) peca.d.getY() / TamRec][(int) peca.d.getX() / TamRec] = 1;
+            Tela[peca.a.getY() / TamRec][peca.a.getX() / TamRec] = peca.getA();
+            Tela[peca.b.getY() / TamRec][peca.b.getX() / TamRec] = peca.getB();
+            Tela[peca.c.getY() / TamRec][peca.c.getX() / TamRec] = peca.getC();
+            Tela[peca.d.getY() / TamRec][peca.d.getX() / TamRec] = peca.getD();
             return false;
 	}
         moveBaixo(peca);
         return true;
     }
-    public static boolean chegouNaBase(Rectangle r)
+    public static boolean chegouNaBase(Componente r)
     {
-        if((r.getY() + TamRec == YMAX) || (Tela[((int)r.getY()/TamRec) + 1][(int)r.getX()/TamRec] == 1))
+        if((r.getY() + TamRec == YMAX) || (Tela[(r.getY()/TamRec) + 1][r.getX()/TamRec] != null))
         {
             return true;
         }
         return false;
     }
+    
     
     /**
      * 
@@ -331,7 +336,7 @@ public class GameController {
         {
             for(int j=0 ; j<Consts.CMatriz ; j++)
             {
-                if(Tela[i][j]==1)
+                if(Tela[i][j]!=null)
                 {
                     return(i);
                 }
@@ -339,6 +344,7 @@ public class GameController {
         }
         return(-1);
     }
+    
     
     /**
      * Função responsável por percorrer a matriz e determinar se foi completado alguma linha (todas as posições dessa linha possuem valor 1).
@@ -350,9 +356,12 @@ public class GameController {
         int i, j, linha=0;
         for(i=0 ; i<Consts.LMatriz ; i++)
         {
-            for(j=0 ; j<Consts.CMatriz && Tela[i][j]==1 ; j++);
+            for(j=0 ; j<Consts.CMatriz && Tela[i][j]!=null ; j++);
             if(j==Consts.CMatriz)   //Tem uma linha com 1
-                    linha++;
+            {
+                removeLinha(i);
+                linha++;
+            }
         }
         if(linha==1)        //Completou uma linha, então adiciona 50 pontos
             pontuacao+=50;
@@ -362,9 +371,67 @@ public class GameController {
             pontuacao+=800;
         return(linha);       //Retorna a quantidade de linhas que completou (se não completou, linha=0; 
     }
+    
+    
+    /**
+     * Função responsável por fazer com que todos os elementos da matriz até determinada linha, desça uma posição.
+     * Com isso, eliminamos essa linha.
+     * @param linha a ser removida
+     */
+    public static void removeLinha(int linha)
+    {
+        int i, j;
+        Rectangle elemento;
+        ArrayList<Node> rects = new ArrayList<Node>();
+	ArrayList<Node> newrects = new ArrayList<Node>();
+        for(Node node : pane.getChildren())         //Percorrendo os nodes da tela (gráfica)
+        {
+            if (node instanceof Rectangle)          //Adicionando os nodes que são retangulos em um arrayList
+                rects.add(node);
+	}
+	for (Node node : rects)                     //Percorrendo os retangulos que estavam na tela
+        {
+            elemento = (Rectangle) node;
+            if (elemento.getY() == linha * TamRec)  //Se esse retangulo está na linha que será eliminada
+            {
+                Tela[(int)elemento.getY()/TamRec][(int)elemento.getX()/TamRec] = null;  //A posição correspondende na matriz recebe null
+                pane.getChildren().remove(node);    //Remove o elemento da tela (gráfica)
+            } 
+            else                                    //Se esse retangulo não está na linha que será eliminada, adiciona-se ele em outro array list
+		newrects.add(node);
+	}
+        for (Node node : newrects)                  //Percorrendo os retangulos que sobraram
+        {
+            Rectangle a = (Rectangle) node;
+            if (a.getY() < linha * TamRec)          //Se esse retangulo está antes da linha a ser eliminada, eles devem "descer"
+            {
+                Tela[(int) a.getY() / TamRec][(int) a.getX() / TamRec] = null;  //A posição correspondente na matriz recebe null
+		a.setY(a.getY() + TamRec);          //O valor de Y é mudado (pois o retangulo irá descer
+            }
+	}
+	rects.clear();
+	newrects.clear();
+        //Adicionando os nodes da tela (que sobraram) na matriz de componentes
+	for (Node node : pane.getChildren()) 
+        {
+            if (node instanceof Rectangle)
+                rects.add(node);
+	}
+	for (Node node : rects) {
+            Rectangle a = (Rectangle) node;
+            Componente c = new Componente(TamRec-1, TamRec-1, false);   //Criação um componente
+            c.setR(a);                                                  //Dando set no retangulo do componente para esse novo retangulo
+            Tela[(int) a.getY() / TamRec][(int) a.getX() / TamRec] = c; //Colocando esse componente na posição correspondente (o valor de Y foi mudado anteriormente)
+	}
+	rects.clear();
+    }
 
+    
+    /**
+     * Função para retornar a pontuação.
+     * @return pontuacao
+     */
     public static int getPontuacao() {
         return pontuacao;
     }
-
 }

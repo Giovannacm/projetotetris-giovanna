@@ -5,6 +5,7 @@
  */
 package elements;
 
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 /**
@@ -13,23 +14,46 @@ import javafx.scene.shape.Rectangle;
  */
 public class Componente {
     private Rectangle r;
-    private boolean fixa;    //Variável booleana que indica se esse componente é fixo ou não (dessa forma, conseguimos diferencias pea e obstaculo)
+    private boolean fixa;    //Variável booleana que indica se esse componente é fixo ou não (dessa forma, conseguimos diferencias peca=false e obstaculo=true)
     
-    public Componente(Rectangle r, boolean fixa)
+    public Componente(int largura, int altura, boolean fixa)
     {
-        this.r=r;
-        this.fixa=fixa;
+        this.r = new Rectangle(largura, altura);
+        this.fixa = fixa;
     }
-    public Rectangle getR() {
+    public Rectangle getR() 
+    {
         return r;
     }
-    public void setR(Rectangle r) {
+    public void setR(Rectangle r) 
+    {
         this.r = r;
     }
     public boolean isFixa() {
         return fixa;
     }
-    public void setFixa(boolean fixa) {
+    public void setFixa(boolean fixa) 
+    {
         this.fixa = fixa;
+    }
+    public void setX(int x)
+    {
+        this.r.setX(x);
+    }
+    public void setY(int y)
+    {
+        this.r.setY(y);
+    }
+    public void mudaCor(Paint cor)
+    {
+        this.r.setFill(cor);
+    }
+    public int getX()
+    {
+        return((int)this.r.getX());
+    }
+    public int getY()
+    {
+        return((int)this.r.getY());
     }
 }

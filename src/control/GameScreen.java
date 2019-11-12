@@ -1,5 +1,6 @@
 package control;
 
+import elements.Componente;
 import elements.Peca;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -24,7 +25,7 @@ public class GameScreen extends Application {
     private static Scene scene;
     private static Peca peca, proxPeca;
     private static double Gravidade;
-    private static int[][]Tela;        //Matriz que representa a tela do jogo
+    private static Componente[][]Tela;        //Matriz que representa a tela do jogo
     private static int topo;
     
     /**
@@ -37,7 +38,7 @@ public class GameScreen extends Application {
         scene = new Scene(pane, Consts.XMAX + 250, Consts.YMAX);
         //pane.setStyle("-fx-background-color: Black");
         Gravidade = Consts.Gravidade;
-        Tela = new int[Consts.LMatriz][Consts.CMatriz];
+        Tela = new Componente[Consts.LMatriz][Consts.CMatriz];
         topo = 0;
     }
     
@@ -58,7 +59,7 @@ public class GameScreen extends Application {
         //Inicializando a tela/tabuleiro (matriz) do jogo com 0
         for(int i=0 ; i<Consts.LMatriz ; i++)
             for(int j=0 ; j<Consts.CMatriz ; j++)
-                Tela[i][j]=0;
+                Tela[i][j]=null;
         
         GameController.desenhaCenario(primaryStage);
         
@@ -66,7 +67,7 @@ public class GameScreen extends Application {
         primaryStage.show();
         
         peca = GameController.proximaPeca();                        //Pegando a primeira peça do jogo
-        pane.getChildren().addAll(peca.a, peca.b, peca.c, peca.d);
+        pane.getChildren().addAll(peca.getA().getR(), peca.getB().getR(), peca.getC().getR(), peca.getD().getR());
         GameController.moverTeclaPressionada(peca);
         proxPeca = GameController.proximaPeca();                    //Guardando a proxima peça
                 
@@ -81,12 +82,12 @@ public class GameScreen extends Application {
                     {
                         imprimeMatriz();
                         topo=GameController.topo();
-                        //System.out.println("Topo: "+topo);
-                        //System.out.println("Completou "+GameController.completouLinha()+" linhas");
+                        System.out.println("Topo: "+topo);
+                        System.out.println("Completou "+GameController.completouLinha()+" linhas");
                         if(GameController.fazerCair(peca)==false&&topo!=0)       //Se não for mais possível fazer a peça cair, outra peça é criada
                         {
                             peca = proxPeca;                            //Pegando a próxima peça
-                            pane.getChildren().addAll(peca.a, peca.b, peca.c, peca.d);
+                            pane.getChildren().addAll(peca.getA().getR(), peca.getB().getR(), peca.getC().getR(), peca.getD().getR());
                             GameController.moverTeclaPressionada(peca);
                             proxPeca = GameController.proximaPeca();    //Guardando a proxima peça para a próxima iteração
                         }
@@ -108,7 +109,13 @@ public class GameScreen extends Application {
         {
             System.out.println("");
             for(int j=0 ; j<Consts.CMatriz ; j++)
-                System.out.print(" " + Tela[i][j]);
+            {
+                if(Tela[i][j]==null)
+                    System.out.print(" 0");
+                else
+                    System.out.print(" 1");
+            }
+                
         }
     }
 
@@ -153,11 +160,11 @@ public class GameScreen extends Application {
         GameScreen.Gravidade = Gravidade;
     }
 
-    public static int[][] getTela() {
+    public static Componente[][] getTela() {
         return Tela;
     }
 
-    public static void setTela(int[][] Tela) {
+    public static void setTela(Componente[][] Tela) {
         GameScreen.Tela = Tela;
     }
 
