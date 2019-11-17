@@ -66,6 +66,9 @@ public class Peca {                 //Criando a Classe que repesenta os elemento
     {
         return d;
     }
+    public String getNome() {
+        return nome;
+    }
 } 
     
     /*public Rectangle a, b, c, d;    //Cada objeto do tipo Rectangle é um componente da peça, dessa forma, todas as pessas possuem 4 retangulos, onde diferem apenas na disposição desses elementos

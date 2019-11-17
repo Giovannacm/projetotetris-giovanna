@@ -83,8 +83,8 @@ public class GameScreen extends Application {
                         imprimeMatriz();
                         topo=GameController.topo();
                         System.out.println("Topo: "+topo);
-                        System.out.println("Completou "+GameController.completouLinha()+" linhas");
-                        if(GameController.fazerCair(peca)==false&&topo!=0)       //Se não for mais possível fazer a peça cair, outra peça é criada
+                        imprimeMatriz();
+                        if(GameController.fazerCair(peca)==false)       //Se não for mais possível fazer a peça cair, outra peça é criada
                         {
                             peca = proxPeca;                            //Pegando a próxima peça
                             pane.getChildren().addAll(peca.getA().getR(), peca.getB().getR(), peca.getC().getR(), peca.getD().getR());
