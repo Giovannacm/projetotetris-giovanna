@@ -2,6 +2,7 @@ package control;
 
 import elements.Componente;
 import elements.Peca;
+import static java.lang.Math.abs;
 import java.util.ArrayList;
 import utils.Consts;
 import javafx.event.EventHandler;
@@ -329,7 +330,7 @@ public class GameController {
         {
             case("O"):  //Não precisa rotacionar
                 break;
-            default:  //Operador linear T(x,y)=(3-y, x+1)
+            default:
                 OperadorLinear(a);
                 OperadorLinear(b);
                 OperadorLinear(c);
@@ -337,11 +338,11 @@ public class GameController {
                 break;
         }
     }
-    private static void OperadorLinear(Rectangle r)
+    private static void OperadorLinear(Rectangle r) //T(x,y)=(2-y, x+1)
     {
         int x = (int)r.getX();
         int y = (int)r.getY();
-        r.setX(3*TamRec - y);
+        r.setX(abs(2*TamRec - y));
         r.setY(x+TamRec);
     }
 
