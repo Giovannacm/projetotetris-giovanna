@@ -80,9 +80,9 @@ public class GameScreen extends Application {
                 {
                     public void run() 
                     {
-                        imprimeMatriz();
                         topo=GameController.topo();
-                        System.out.println("Topo: "+topo);
+                        //imprimeMatriz();
+                        //System.out.println("Topo: "+topo);
                         imprimeMatriz();
                         if(GameController.fazerCair(peca)==false)       //Se não for mais possível fazer a peça cair, outra peça é criada
                         {
@@ -98,7 +98,6 @@ public class GameScreen extends Application {
             }
 	};
 	fall.schedule(task, 0, 600*((int)Gravidade));  //Definindo o período de execução
-                
     }
     
     public static void imprimeMatriz()
@@ -115,7 +114,6 @@ public class GameScreen extends Application {
                 else
                     System.out.print(" 1");
             }
-                
         }
     }
 

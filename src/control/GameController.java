@@ -189,7 +189,7 @@ public class GameController {
                         break;
                     case DOWN:
                         moveBaixo(peca);
-                    break;
+                        break;
                     case SPACE:
                         rotaciona(peca);
                         break;
@@ -322,28 +322,71 @@ public class GameController {
      */
     private static void rotaciona(Peca peca)
     {
+        int xiM, yiM;   //Variáveis que armazenam o valor de x/y inicial da matriz 4x4 (utilizada na rotação)
         Rectangle a = peca.a.getR();
 	Rectangle b = peca.b.getR();
 	Rectangle c = peca.c.getR();
 	Rectangle d = peca.d.getR();
         switch (peca.getNome())
         {
-            case("O"):  //Não precisa rotacionar
+            case "I":
+                xiM = (int) b.getX() - TamRec;
+                yiM = (int) b.getY() - 2*TamRec;
+                OperadorLinear(a, xiM, yiM);
+                OperadorLinear(b, xiM, yiM);
+                OperadorLinear(c, xiM, yiM);
+                OperadorLinear(d, xiM, yiM);
                 break;
-            default:
-                OperadorLinear(a);
-                OperadorLinear(b);
-                OperadorLinear(c);
-                OperadorLinear(d);
+            case "O":   //Não precisa rotacionar
+                break;
+            case "T":   //Eixo = b
+                xiM = (int) b.getX() - TamRec;
+                yiM = (int) b.getY() - 2*TamRec;
+                OperadorLinear(a, xiM, yiM);
+                OperadorLinear(b, xiM, yiM);
+                OperadorLinear(c, xiM, yiM);
+                OperadorLinear(d, xiM, yiM);
+                break;
+            case "S":   //Eixo = b
+                xiM = (int) b.getX() - TamRec;
+                yiM = (int) b.getY() - 2*TamRec;
+                OperadorLinear(a, xiM, yiM);
+                OperadorLinear(b, xiM, yiM);
+                OperadorLinear(c, xiM, yiM);
+                OperadorLinear(d, xiM, yiM);
+                break;
+            case "Z":   //Eixo = b
+                xiM = (int) b.getX() - TamRec;
+                yiM = (int) b.getY() - 2*TamRec;
+                OperadorLinear(a, xiM, yiM);
+                OperadorLinear(b, xiM, yiM);
+                OperadorLinear(c, xiM, yiM);
+                OperadorLinear(d, xiM, yiM);
+                break;
+            case "J":   //Eixo = c
+                xiM = (int) c.getX() - TamRec;
+                yiM = (int) c.getY() - 2*TamRec;
+                OperadorLinear(a, xiM, yiM);
+                OperadorLinear(b, xiM, yiM);
+                OperadorLinear(c, xiM, yiM);
+                OperadorLinear(d, xiM, yiM);
+                break;
+            case"L":    //Eixo = c
+                xiM = (int) c.getX() - TamRec;
+                yiM = (int) c.getY() - 2*TamRec;
+                OperadorLinear(a, xiM, yiM);
+                OperadorLinear(b, xiM, yiM);
+                OperadorLinear(c, xiM, yiM);
+                OperadorLinear(d, xiM, yiM);
                 break;
         }
     }
-    private static void OperadorLinear(Rectangle r) //T(x,y)=(2-y, x+1)
+    private static void OperadorLinear(Rectangle r, int xMatriz, int yMatriz) //T(x,y)=(2-y, x)
     {
-        int x = (int)r.getX();
-        int y = (int)r.getY();
-        r.setX(abs(2*TamRec - y));
-        r.setY(x+TamRec);
+        int dX = (int)r.getX() - xMatriz;        //dX representa a distancia da peça até a "matriz" imaginária da rotação
+        int dY = (int)r.getY() - yMatriz;        //dY representa a distancia da peça até a "matriz" imaginária de rotação
+        r.setX(xMatriz + 3*TamRec - dY); 
+        r.setY(yMatriz + dX + TamRec);
     }
 
     
