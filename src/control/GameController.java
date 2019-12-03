@@ -2,8 +2,8 @@ package control;
 
 import elements.Componente;
 import elements.Peca;
-import static java.lang.Math.abs;
 import java.util.ArrayList;
+import java.util.Random;
 import utils.Consts;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
@@ -17,8 +17,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 /**
- * Projeto de POO 2019
- * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
+ * Projeto Tetris - POO 2019.
+ * Aluna: Giovanna Carreira Marinho
  */
 public class GameController {
     //Uso das constantes da classe Consts
@@ -94,20 +94,22 @@ public class GameController {
      */
     public static Peca proximaPeca()
     {        
-        int valorAleatorio = (int) (Math.random() * 6);     //Pegando um valor aleatório (0 à 6) para determinar qual das 7 peça serão colocadas no jogo
-	String nome = "";
+        Random valorAleatorio = new Random();
+	char nome = ' ';
+        Color cor = null;
 	Componente a = new Componente(TamRec-1, TamRec-1, false);
         Componente b = new Componente(TamRec-1, TamRec-1, false);
         Componente c = new Componente(TamRec-1, TamRec-1, false);
         Componente d = new Componente(TamRec-1, TamRec-1, false);
-        switch(valorAleatorio)
+        switch(valorAleatorio.nextInt(7))   //Pegando um valor aleatório (0 à 6) para determinar qual das 7 peça serão colocadas no jogo
         {
             case(0):
                 a.setX(XMAX / 2 - TamRec - TamRec);
 		b.setX(XMAX / 2 - TamRec);
 		c.setX(XMAX / 2);
 		d.setX(XMAX / 2 + TamRec);
-		nome = "I";
+		nome = 'I';
+                cor = Color.LIGHTBLUE;
                 break;
             case(1):
                 a.setX(XMAX / 2 - TamRec);
@@ -116,7 +118,8 @@ public class GameController {
                 c.setY(TamRec);
                 d.setX(XMAX / 2);
                 d.setY(TamRec);
-                nome = "O";
+                nome = 'O';
+                cor = Color.YELLOW;
                 break;
             case(2):
                 a.setX(XMAX / 2 - TamRec);
@@ -124,7 +127,8 @@ public class GameController {
 		c.setX(XMAX / 2);
 		c.setY(TamRec);
 		d.setX(XMAX / 2 + TamRec);
-		nome = "T";
+		nome = 'T';
+                cor = Color.PURPLE;
                 break;
             case(3):
                 a.setX(XMAX / 2 + TamRec);
@@ -133,38 +137,46 @@ public class GameController {
                 c.setY(TamRec);
                 d.setX(XMAX / 2 - TamRec);
                 d.setY(TamRec);
-                nome = "S";
+                nome = 'S';
+                cor = Color.GREEN;
                 break;
             case(4):
-                a.setX(XMAX / 2 + TamRec);
+                a.setX(XMAX / 2 - TamRec);
                 b.setX(XMAX / 2);
-                c.setX(XMAX / 2 + TamRec);
+                c.setX(XMAX / 2);
                 c.setY(TamRec);
-                d.setX(XMAX / 2 + TamRec + TamRec);
+                d.setX(XMAX / 2 + TamRec);
                 d.setY(TamRec);
-                nome = "Z";
+                nome = 'Z';
+                cor = Color.RED;
                 break;
             case(5):
                 a.setX(XMAX / 2 - TamRec);
-                b.setX(XMAX / 2 - TamRec);
+                a.setY(TamRec);
+                b.setX(XMAX / 2);
                 b.setY(TamRec);
-                c.setX(XMAX / 2);
+                c.setX(XMAX / 2 + TamRec);
                 c.setY(TamRec);
-                d.setX(XMAX / 2 + TamRec);
-                d.setY(TamRec);
-                nome = "J";
+                d.setX(XMAX / 2 - TamRec);
+                nome = 'J';
+                cor = Color.DARKBLUE;
                 break;
             case(6):
-                a.setX(XMAX / 2 + TamRec);
-                b.setX(XMAX / 2 - TamRec);
+                a.setX(XMAX / 2 - TamRec);
+                a.setY(TamRec);
+                b.setX(XMAX / 2);
                 b.setY(TamRec);
-                c.setX(XMAX / 2);
+                c.setX(XMAX / 2 + TamRec);
                 c.setY(TamRec);
                 d.setX(XMAX / 2 + TamRec);
-                d.setY(TamRec);
-                nome = "L";
+                nome = 'L';
+                cor = Color.ORANGE;
                 break;
         }
+        a.mudaCor(cor);  //Set na cor de cada retangulo
+        b.mudaCor(cor);
+        c.mudaCor(cor);
+        d.mudaCor(cor);
 	return new Peca(a, b, c, d, nome);
     }
     
@@ -176,8 +188,7 @@ public class GameController {
      */
     public static void moverTeclaPressionada(Peca peca)
     {
-        Scene cenaJogo = GameScreen.getScene();
-        cenaJogo.setOnKeyPressed(new EventHandler<KeyEvent>() {
+        GameScreen.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
                 switch (event.getCode()) {
@@ -191,7 +202,8 @@ public class GameController {
                         moveBaixo(peca);
                         break;
                     case SPACE:
-                        rotaciona(peca);
+                        if(peca.getNome()!='O')//Se for a peça O não tem necessidade de rotacionar
+                            rotaciona(peca);
                         break;
 		}
             }
@@ -209,20 +221,18 @@ public class GameController {
     public static void moveDireita(Peca peca) 
     {
         //Mover a peça para a direita, implica em mover todos os retangulos pertencentes à ela por meio do incremento da posição x
-        if(movimentoValidoD(peca.a) && movimentoValidoD(peca.b)&&movimentoValidoD(peca.c)&&movimentoValidoD(peca.d))
+        if(movimentoValidoD(peca.getA()) && movimentoValidoD(peca.getB())&&movimentoValidoD(peca.getC())&&movimentoValidoD(peca.getD()))
         {
-            peca.a.setX(peca.a.getX() + TamRec);
-            peca.b.setX(peca.b.getX() + TamRec);
-            peca.c.setX(peca.c.getX() + TamRec);
-            peca.d.setX(peca.d.getX() + TamRec);
+            peca.getA().setX(peca.getA().getX() + TamRec);
+            peca.getB().setX(peca.getB().getX() + TamRec);
+            peca.getC().setX(peca.getC().getX() + TamRec);
+            peca.getD().setX(peca.getD().getX() + TamRec);
         }
     }
     public static boolean movimentoValidoD(Componente r)
     {
         if((r.getX() + TamRec <= XMAX - TamRec)&&((Tela[r.getY()/TamRec][r.getX()/TamRec + 1] == null)))
-        {
             return true;
-        }
         return false;
     }
     
@@ -237,20 +247,18 @@ public class GameController {
     public static void moveEsquerda(Peca peca) 
     { 
         //Mover a peça para a esquerda, implica em mover todos os retangulos pertencentes à ela por meio do decrementos da posição x
-        if(movimentoValidoE(peca.a) && movimentoValidoE(peca.b) && movimentoValidoE(peca.c) && movimentoValidoE(peca.d))
+        if(movimentoValidoE(peca.getA()) && movimentoValidoE(peca.getB()) && movimentoValidoE(peca.getC()) && movimentoValidoE(peca.getD()))
         {
-            peca.a.setX(peca.a.getX() - TamRec);
-            peca.b.setX(peca.b.getX() - TamRec);
-            peca.c.setX(peca.c.getX() - TamRec);
-            peca.d.setX(peca.d.getX() - TamRec);
+            peca.getA().setX(peca.getA().getX() - TamRec);
+            peca.getB().setX(peca.getB().getX() - TamRec);
+            peca.getC().setX(peca.getC().getX() - TamRec);
+            peca.getD().setX(peca.getD().getX() - TamRec);
         }
     }
     public static boolean movimentoValidoE(Componente r)
     {
         if((r.getX() - TamRec >= 0)&&(Tela[r.getY()/TamRec][r.getX()/TamRec - 1] == null))
-        {
             return true;
-        }
         return false;
     }
      
@@ -264,21 +272,19 @@ public class GameController {
      */
     public static void moveBaixo(Peca peca) 
     {
-        if(movimentoValidoB(peca.a) && movimentoValidoB(peca.b) && movimentoValidoB(peca.c) && movimentoValidoB(peca.d))
+        if(movimentoValidoB(peca.getA()) && movimentoValidoB(peca.getB()) && movimentoValidoB(peca.getC()) && movimentoValidoB(peca.getD()))
         {
-            peca.a.setY(peca.a.getY() + TamRec);
-            peca.b.setY(peca.b.getY() + TamRec);
-            peca.c.setY(peca.c.getY() + TamRec);
-            peca.d.setY(peca.d.getY() + TamRec);
+            peca.getA().setY(peca.getA().getY() + TamRec);
+            peca.getB().setY(peca.getB().getY() + TamRec);
+            peca.getC().setY(peca.getC().getY() + TamRec);
+            peca.getD().setY(peca.getD().getY() + TamRec);
             pontuacaoTexto.setText("Pontuação atual: " + Integer.toString(pontuacao++));
 	}
     }
     public static boolean movimentoValidoB(Componente r)
     {
         if((r.getY() + TamRec < YMAX) && (Tela[r.getY()/TamRec + 1][r.getX()/TamRec] == null))
-        {
             return true;
-        }
         return false;
     }
     
@@ -294,12 +300,12 @@ public class GameController {
      */
     public static boolean fazerCair(Peca peca)
     {
-        if(chegouNaBase(peca.a) || chegouNaBase(peca.b) || chegouNaBase(peca.c) || chegouNaBase(peca.d)) 
+        if(chegouNaBase(peca.getA()) || chegouNaBase(peca.getB()) || chegouNaBase(peca.getC()) || chegouNaBase(peca.getD())) 
         {
-            Tela[peca.a.getY() / TamRec][peca.a.getX() / TamRec] = peca.getA();
-            Tela[peca.b.getY() / TamRec][peca.b.getX() / TamRec] = peca.getB();
-            Tela[peca.c.getY() / TamRec][peca.c.getX() / TamRec] = peca.getC();
-            Tela[peca.d.getY() / TamRec][peca.d.getX() / TamRec] = peca.getD();
+            Tela[peca.getA().getY() / TamRec][peca.getA().getX() / TamRec] = peca.getA();
+            Tela[peca.getB().getY() / TamRec][peca.getB().getX() / TamRec] = peca.getB();
+            Tela[peca.getC().getY() / TamRec][peca.getC().getX() / TamRec] = peca.getC();
+            Tela[peca.getD().getY() / TamRec][peca.getD().getX() / TamRec] = peca.getD();
             completouLinha();   //Verificando se completou linha para remove-lá
             return false;
 	}
@@ -309,86 +315,52 @@ public class GameController {
     public static boolean chegouNaBase(Componente r)
     {
         if((r.getY() + TamRec == YMAX) || (Tela[(r.getY()/TamRec) + 1][r.getX()/TamRec] != null))
-        {
             return true;
-        }
         return false;
     }
     
     
     /**
-     * 
+     * Função responsável por rotacionar uma peça.
+     * Inicialmente é verificado se a peça é O, pois se for, não há necessidade de rotacioná-la. Em seguida, conseguimos definir a posição 
+     *      inicial da matriz imaginária utilizada na rotação (onde foi desenvolvido uma transformação linear para isso) a partir do eixo de rotação.
+     * Temos que todas as peças rotacionam em torno do retangulo b, dessa forma a posição inicial da matriz é determinada por meio da posição de b.
+     * Após a atribuição de valores para o x e y inicial da matriz, é aplicado um operador linar sobre cada retângulo.
      * @param peca 
      */
-    private static void rotaciona(Peca peca)
+    public static void rotaciona(Peca peca)
     {
-        int xiM, yiM;   //Variáveis que armazenam o valor de x/y inicial da matriz 4x4 (utilizada na rotação)
-        Rectangle a = peca.a.getR();
-	Rectangle b = peca.b.getR();
-	Rectangle c = peca.c.getR();
-	Rectangle d = peca.d.getR();
-        switch (peca.getNome())
+        Rectangle a = peca.getA().getR();   //Pegango o retangulo de cada componente da peça
+	Rectangle b = peca.getB().getR();
+	Rectangle c = peca.getC().getR();
+	Rectangle d = peca.getD().getR();
+        //Variáveis que armazenam o valor de x/y inicial da matriz imaginária 4x4 (utilizada na rotação) de acordo com o eixo de rotação. Como todas as pecas rotacionam em torno da peça b, conseguimos identificar o início da matriz imaginária. 
+        int xiM = (int) b.getX() - TamRec;      //Seu x é o x do eixo - 1
+        int yiM = (int) b.getY() - 2*TamRec;    //Seu y é o y do eixo - 2
+        if(podeRotacionar(a, xiM, yiM)&&podeRotacionar(b, xiM, yiM)&&podeRotacionar(c, xiM, yiM)&&podeRotacionar(d, xiM, yiM))  //Se pode rotacionar todos os retangulos, o operador linear é aplicado em cada componente da peça para rotacionar
         {
-            case "I":
-                xiM = (int) b.getX() - TamRec;
-                yiM = (int) b.getY() - 2*TamRec;
-                OperadorLinear(a, xiM, yiM);
-                OperadorLinear(b, xiM, yiM);
-                OperadorLinear(c, xiM, yiM);
-                OperadorLinear(d, xiM, yiM);
-                break;
-            case "O":   //Não precisa rotacionar
-                break;
-            case "T":   //Eixo = b
-                xiM = (int) b.getX() - TamRec;
-                yiM = (int) b.getY() - 2*TamRec;
-                OperadorLinear(a, xiM, yiM);
-                OperadorLinear(b, xiM, yiM);
-                OperadorLinear(c, xiM, yiM);
-                OperadorLinear(d, xiM, yiM);
-                break;
-            case "S":   //Eixo = b
-                xiM = (int) b.getX() - TamRec;
-                yiM = (int) b.getY() - 2*TamRec;
-                OperadorLinear(a, xiM, yiM);
-                OperadorLinear(b, xiM, yiM);
-                OperadorLinear(c, xiM, yiM);
-                OperadorLinear(d, xiM, yiM);
-                break;
-            case "Z":   //Eixo = b
-                xiM = (int) b.getX() - TamRec;
-                yiM = (int) b.getY() - 2*TamRec;
-                OperadorLinear(a, xiM, yiM);
-                OperadorLinear(b, xiM, yiM);
-                OperadorLinear(c, xiM, yiM);
-                OperadorLinear(d, xiM, yiM);
-                break;
-            case "J":   //Eixo = c
-                xiM = (int) c.getX() - TamRec;
-                yiM = (int) c.getY() - 2*TamRec;
-                OperadorLinear(a, xiM, yiM);
-                OperadorLinear(b, xiM, yiM);
-                OperadorLinear(c, xiM, yiM);
-                OperadorLinear(d, xiM, yiM);
-                break;
-            case"L":    //Eixo = c
-                xiM = (int) c.getX() - TamRec;
-                yiM = (int) c.getY() - 2*TamRec;
-                OperadorLinear(a, xiM, yiM);
-                OperadorLinear(b, xiM, yiM);
-                OperadorLinear(c, xiM, yiM);
-                OperadorLinear(d, xiM, yiM);
-                break;
+            OperadorLinear(a, xiM, yiM);
+            OperadorLinear(b, xiM, yiM);
+            OperadorLinear(c, xiM, yiM);
+            OperadorLinear(d, xiM, yiM);
         }
     }
-    private static void OperadorLinear(Rectangle r, int xMatriz, int yMatriz) //T(x,y)=(2-y, x)
+    public static void OperadorLinear(Rectangle r, int xMatriz, int yMatriz) //Operador linear: T(x,y)=(3-y, x+1)
     {
-        int dX = (int)r.getX() - xMatriz;        //dX representa a distancia da peça até a "matriz" imaginária da rotação
-        int dY = (int)r.getY() - yMatriz;        //dY representa a distancia da peça até a "matriz" imaginária de rotação
-        r.setX(xMatriz + 3*TamRec - dY); 
-        r.setY(yMatriz + dX + TamRec);
+        int dX = (int)r.getX() - xMatriz;           //dX representa a distancia (com o valor de x) do retangulo até a "matriz" imaginária da rotação
+        int dY = (int)r.getY() - yMatriz;           //dY representa a distancia (com o valor de y) do retangulo até a "matriz" imaginária de rotação
+        r.setX(xMatriz + 3*TamRec - dY);            //Aplicando a transformação, ou seja, x=3-y
+        r.setY(yMatriz + dX + TamRec);              //Aplicando a transformação, ou seja, y=x+1
     }
-
+    public static boolean podeRotacionar(Rectangle r, int xMatriz, int yMatriz)
+    {
+        int xDest = xMatriz + 3*TamRec - ((int)r.getY() - yMatriz);
+        int yDest = yMatriz + TamRec + ((int)r.getX() - xMatriz);
+        //Se o x e y de destino está dento do limite e não tem nenhum componente na posição de destino da matriz lógica, então pode rotacionar
+        if((xDest <= XMAX-TamRec && xDest >= 0) && (yDest!=YMAX && yDest>=0) && (Tela[yDest/TamRec][xDest/TamRec] == null))
+            return true;
+        return false;
+    }
     
     /**
      * Função responsável por percorrer a matriz (tela) para encontrar onde está a peça mais alta.

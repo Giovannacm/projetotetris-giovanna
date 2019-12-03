@@ -13,8 +13,8 @@ import javafx.scene.shape.Rectangle;
  * @author giova
  */
 public class Componente {
-    private Rectangle r;
-    private boolean fixa;    //Variável booleana que indica se esse componente é fixo ou não (dessa forma, conseguimos diferencias peca=false e obstaculo=true)
+    private Rectangle r;        //Um componente possui um retangulo (do JavaFx)
+    private boolean fixa;       //E uma variável booleana que indica se esse componente é fixo ou não (dessa forma, conseguimos diferencias peca=false e obstaculo=true)
     
     public Componente(int largura, int altura, boolean fixa)
     {
@@ -44,7 +44,7 @@ public class Componente {
     {
         this.r.setY(y);
     }
-    public void mudaCor(Paint cor)
+    public void mudaCor(Paint cor)  //Mudando a cor do retangulo a partir de uma função do javaFx
     {
         this.r.setFill(cor);
     }

@@ -1,22 +1,18 @@
 package control;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.TilePane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import utils.Consts;
 
 /**
- * Projeto de POO 2019 mudei essa linha
- * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
- */ 
+ * Projeto Tetris - POO 2019.
+ * Aluna: Giovanna Carreira Marinho
+ */
 public class Main extends Application{
    @Override
     public void start(Stage primaryStage) {

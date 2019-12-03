@@ -7,17 +7,13 @@ import java.util.TimerTask;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Scene;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import utils.Consts;
 
 /**
- * Projeto de POO 2019
- * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
+ * Projeto Tetris - POO 2019.
+ * Aluna: Giovanna Carreira Marinho
  */
 public class GameScreen extends Application {
     private static GameScreen Instance;
@@ -81,9 +77,8 @@ public class GameScreen extends Application {
                     public void run() 
                     {
                         topo=GameController.topo();
-                        //imprimeMatriz();
-                        //System.out.println("Topo: "+topo);
                         imprimeMatriz();
+                        //System.out.println("Topo: "+topo);
                         if(GameController.fazerCair(peca)==false)       //Se não for mais possível fazer a peça cair, outra peça é criada
                         {
                             peca = proxPeca;                            //Pegando a próxima peça
