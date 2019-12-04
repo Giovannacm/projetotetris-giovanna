@@ -24,6 +24,8 @@ public class GameController {
     //Uso das constantes da classe Consts
     private static int XMAX = Consts.XMAX;
     private static int YMAX = Consts.YMAX;
+    private static int CMatriz = Consts.CMatriz;
+    private static int LMatriz = Consts.LMatriz;
     private static int TamRec = Consts.TamRec;
     private static Componente[][]Tela = GameScreen.getTela();
     private static Pane pane = GameScreen.getPane();
@@ -180,6 +182,20 @@ public class GameController {
 	return new Peca(a, b, c, d, nome);
     }
     
+    
+    public static void adicionaObstaculos(int n)
+    {
+        Random valorAleatorio = new Random();
+        for(int i=0 ; i<n ; i++)
+        {
+            Componente obstaculo = new Componente(TamRec-1, TamRec-1, true);
+            obstaculo.setX(5 * TamRec);   //valorAleatorio.nextInt(CMatriz) * TamRec
+            obstaculo.setY(17 * TamRec);   //valorAleatorio.nextInt(LMatriz) * TamRec
+            obstaculo.mudaCor(Color.BLACK);
+            pane.getChildren().addAll(obstaculo.getR());
+            Tela[obstaculo.getY() / TamRec][obstaculo.getX() / TamRec] = obstaculo;
+        }
+    }
     
     /**
      * Função de utiliza o javaFx para realizar a leitura do teclado
@@ -421,7 +437,7 @@ public class GameController {
         int i, j;
         Rectangle elemento;
         ArrayList<Node> rec = new ArrayList<Node>();
-	ArrayList<Node> novosrec = new ArrayList<Node>();
+	ArrayList<Componente> novoscomp = new ArrayList<Componente>();
         for(Node node : pane.getChildren())         //Percorrendo os nodes da tela (gráfica)
         {
             if (node instanceof Rectangle)          //Adicionando os nodes que são retangulos em um arrayList
@@ -429,26 +445,35 @@ public class GameController {
 	}
 	for(Node node : rec)                        //Percorrendo os retangulos que estavam na tela (o array list rec)
         {
-            elemento = (Rectangle) node;
-            if (elemento.getY() == linha * TamRec)  //Se esse retangulo está na linha que será eliminada
+            elemento = (Rectangle) node;            //Colocando em elemento o retangulo do arraylist
+            if(elemento.getY() == linha * TamRec && (!Tela[(int)elemento.getY()/TamRec][(int)elemento.getX()/TamRec].isFixa()))  //Se esse retangulo está na linha que será eliminada e não é fixo, ou seja, não é um obstáculo
             {
-                Tela[(int)elemento.getY()/TamRec][(int)elemento.getX()/TamRec] = null;  //A posição correspondende na matriz recebe null
+                Tela[(int)elemento.getY()/TamRec][(int)elemento.getX()/TamRec] = null;  //A posição correspondende na matriz recebe null, pois será removido da matriz de componentes
                 pane.getChildren().remove(node);    //Remove o elemento da tela (gráfica)
             } 
-            else if (elemento.getY() < linha * TamRec)          //Se esse retangulo está antes da linha a ser eliminada, eles devem "descer"
+            else if(elemento.getY() < linha * TamRec)          //Se esse retangulo está antes da linha a ser eliminada, eles devem "descer"
             {
-                Tela[(int)elemento.getY()/TamRec][(int)elemento.getX()/TamRec] = null;  //A posição correspondente na matriz recebe null
-		elemento.setY(elemento.getY() + TamRec);          //O valor de Y é mudado (pois o retangulo irá descer)
-                novosrec.add(node);                 //Ele é adicionado em outro array list (de novos retangulos)
+                //O elemento deve descer apenas se, caso tenha um elemento em baixo, ele não deve ser um obstáculo, ou seja, não deve ser fixo
+                if((Tela[(int)elemento.getY()/TamRec + 1][(int)elemento.getX()/TamRec]==null) ||(Tela[(int)elemento.getY()/TamRec + 1][(int)elemento.getX()/TamRec]!=null && !Tela[(int)elemento.getY()/TamRec + 1][(int)elemento.getX()/TamRec].isFixa()))
+                {
+                    Tela[(int)elemento.getY()/TamRec][(int)elemento.getX()/TamRec] = null;  //A posição correspondente na matriz recebe null, pois ele é removido dessa posição na matriz, irá para a próxima linha
+                    elemento.setY(elemento.getY() + TamRec);          //O valor de Y é mudado (pois o retangulo irá descer)
+                }
+                Componente c = new Componente(TamRec-1, TamRec-1, false);          //Criação um componente não obstáculo
+                c.setR(elemento);                                                  //Dando set no retangulo do componente para esse novo retangulo
+                novoscomp.add(c);                 //Ele é adicionado em outro array list (de novos componentes)
             }
-		
+            else if(Tela[(int)elemento.getY()/TamRec][(int)elemento.getX()/TamRec].isFixa())    //Se é um obstáculo, continua onde está, então não muda nada, apenas cria um componente para adicionar no arrayList
+            {
+                Componente c = new Componente(TamRec-1, TamRec-1, true);          //Criação um componente não obstáculo
+                c.setR(elemento);                                                  //Dando set no retangulo do componente para esse novo retangulo
+                novoscomp.add(c);                 //Ele é adicionado em outro array list (de novos componentes)
+            }
 	}
-	for(Node node : novosrec)      //Percorrendo o array list dos retangulos novos (que ficarão depois da eliminação da linha)
+	for(Componente comp : novoscomp)      //Percorrendo o array list dos componentes novos (que ficarão depois da eliminação da linha)
         {
-            elemento = (Rectangle) node;
-            Componente c = new Componente(TamRec-1, TamRec-1, false);          //Criação um componente
-            c.setR(elemento);                                                  //Dando set no retangulo do componente para esse novo retangulo
-            Tela[(int)elemento.getY()/TamRec][(int)elemento.getX()/TamRec] = c; //Colocando esse componente na posição correspondente (o valor de Y foi mudado anteriormente)
+            elemento = comp.getR();             //Pegando o retangulo desse elemento
+            Tela[(int)elemento.getY()/TamRec][(int)elemento.getX()/TamRec] = comp; //Colocando esse componente na posição correspondente (o valor de Y foi mudado anteriormente, se ele não é obstáculo)
 	}
     }
 

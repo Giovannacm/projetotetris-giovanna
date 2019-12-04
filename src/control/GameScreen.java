@@ -50,17 +50,14 @@ public class GameScreen extends Application {
         return(Instance);
     }
     
+    
     @Override
     public void start(Stage primaryStage) {
-        //Inicializando a tela/tabuleiro (matriz) do jogo com 0
-        for(int i=0 ; i<Consts.LMatriz ; i++)
-            for(int j=0 ; j<Consts.CMatriz ; j++)
-                Tela[i][j]=null;
-        
+        inicializaMatriz();     //Inicializando a tela/tabuleiro (matriz) do jogo com null
         GameController.desenhaCenario(primaryStage);
+        primaryStage.show();    //Exibindo tudo que foi adicionado anteriormente
         
-        //Exibindo tudo que foi adicionado anteriormente
-        primaryStage.show();
+        GameController.adicionaObstaculos(1);
         
         peca = GameController.proximaPeca();                        //Pegando a primeira peça do jogo
         pane.getChildren().addAll(peca.getA().getR(), peca.getB().getR(), peca.getC().getR(), peca.getD().getR());
@@ -77,7 +74,7 @@ public class GameScreen extends Application {
                     public void run() 
                     {
                         topo=GameController.topo();
-                        imprimeMatriz();
+                        //imprimeMatriz();
                         //System.out.println("Topo: "+topo);
                         if(GameController.fazerCair(peca)==false)       //Se não for mais possível fazer a peça cair, outra peça é criada
                         {
@@ -95,6 +92,13 @@ public class GameScreen extends Application {
 	fall.schedule(task, 0, 600*((int)Gravidade));  //Definindo o período de execução
     }
     
+    
+    public static void inicializaMatriz()
+    {
+        for(int i=0 ; i<Consts.LMatriz ; i++)
+            for(int j=0 ; j<Consts.CMatriz ; j++)
+                Tela[i][j]=null;
+    }
     public static void imprimeMatriz()
     {
         System.out.println("");
@@ -112,6 +116,7 @@ public class GameScreen extends Application {
         }
     }
 
+    
     //Métodos get e set para os atributos de GameScreen. (São utilizados em GameController para ter acesso aos atributos de GameScreen)
     public static Pane getPane() {
         return pane;
@@ -127,22 +132,6 @@ public class GameScreen extends Application {
 
     public static void setScene(Scene scene) {
         GameScreen.scene = scene;
-    }
-
-    public static Peca getPeca() {
-        return peca;
-    }
-
-    public static void setPeca(Peca peca) {
-        GameScreen.peca = peca;
-    }
-
-    public static Peca getProxPeca() {
-        return proxPeca;
-    }
-
-    public static void setProxPeca(Peca proxPeca) {
-        GameScreen.proxPeca = proxPeca;
     }
 
     public static double getGravidade() {
