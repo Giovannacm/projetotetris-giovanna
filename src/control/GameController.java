@@ -31,7 +31,8 @@ public class GameController {
     private static Pane pane = GameScreen.getPane();
     private static Scene scene = GameScreen.getScene();
     private static int pontuacao = 0;
-    private static Text pontuacaoTexto = new Text("Pontuação atual: " + Integer.toString(pontuacao));
+    private static Text pontuacaoTexto = new Text("Pontuação: " + Integer.toString(pontuacao));
+    private static Text faseTexto = new Text("Fase: ");
     
     /**
      * Função responsável por desenhar os elementos do cenário.
@@ -41,15 +42,14 @@ public class GameController {
     public static void desenhaCenario(Stage primaryStage)
     {
         //Texto para indicar a fase atual
-        Text faseTexto = new Text("Fase atual: ");
         faseTexto.setStyle("-fx-font: 20 arial;");
 	faseTexto.setX(310);
-        faseTexto.setY(20);
+        faseTexto.setY(30);
         
         //Texto para indicar a pontuação atual
         pontuacaoTexto.setStyle("-fx-font: 20 arial;");
         pontuacaoTexto.setX(310);
-        pontuacaoTexto.setY(70);
+        pontuacaoTexto.setY(80);
         
         //Texto para indicar a pontuação atual
         Text proximaPeca = new Text("Próxima peça: ");
@@ -189,8 +189,8 @@ public class GameController {
         for(int i=0 ; i<n ; i++)
         {
             Componente obstaculo = new Componente(TamRec-1, TamRec-1, true);
-            obstaculo.setX(5 * TamRec);   //valorAleatorio.nextInt(CMatriz) * TamRec
-            obstaculo.setY(17 * TamRec);   //valorAleatorio.nextInt(LMatriz) * TamRec
+            obstaculo.setX(5 * TamRec); //valorAleatorio.nextInt(CMatriz)
+            obstaculo.setY(16 * TamRec);   //valorAleatorio.nextInt(LMatriz)
             obstaculo.mudaCor(Color.BLACK);
             pane.getChildren().addAll(obstaculo.getR());
             Tela[obstaculo.getY() / TamRec][obstaculo.getX() / TamRec] = obstaculo;
@@ -294,7 +294,7 @@ public class GameController {
             peca.getB().setY(peca.getB().getY() + TamRec);
             peca.getC().setY(peca.getC().getY() + TamRec);
             peca.getD().setY(peca.getD().getY() + TamRec);
-            pontuacaoTexto.setText("Pontuação atual: " + Integer.toString(pontuacao++));
+            pontuacaoTexto.setText("Pontuação: " + Integer.toString(pontuacao++));
 	}
     }
     public static boolean movimentoValidoB(Componente r)
@@ -403,7 +403,6 @@ public class GameController {
     /**
      * Função responsável por percorrer a matriz e determinar se foi completado alguma linha (todas as posições dessa linha possuem valor 1).
      * Além disso, de acordo com o número de linhas completadas, a pontuação aumenta.
-     * @return número de linhas completadas.
      */
     public static void completouLinha()
     {
@@ -423,7 +422,6 @@ public class GameController {
             pontuacao+=200;
         else if(linha==3)   //Completou tres linha, então adiciona 800 pontos
             pontuacao+=800;
-        //return(linha);       //Retorna a quantidade de linhas que completou (se não completou, linha=0; 
     }
     
     
@@ -451,7 +449,7 @@ public class GameController {
                 Tela[(int)elemento.getY()/TamRec][(int)elemento.getX()/TamRec] = null;  //A posição correspondende na matriz recebe null, pois será removido da matriz de componentes
                 pane.getChildren().remove(node);    //Remove o elemento da tela (gráfica)
             } 
-            else if(elemento.getY() < linha * TamRec)          //Se esse retangulo está antes da linha a ser eliminada, eles devem "descer"
+            else if(elemento.getY() < linha * TamRec && (!Tela[(int)elemento.getY()/TamRec][(int)elemento.getX()/TamRec].isFixa())) //Se esse retangulo está antes da linha a ser eliminada e não é um obstáculo, eles devem "descer"
             {
                 //O elemento deve descer apenas se, caso tenha um elemento em baixo, ele não deve ser um obstáculo, ou seja, não deve ser fixo
                 if((Tela[(int)elemento.getY()/TamRec + 1][(int)elemento.getX()/TamRec]==null) ||(Tela[(int)elemento.getY()/TamRec + 1][(int)elemento.getX()/TamRec]!=null && !Tela[(int)elemento.getY()/TamRec + 1][(int)elemento.getX()/TamRec].isFixa()))
@@ -485,4 +483,9 @@ public class GameController {
     public static int getPontuacao() {
         return pontuacao;
     }
+
+     public static void setFaseTexto(String text) {
+        faseTexto.setText(text);
+    }
+    
 }
