@@ -4,15 +4,12 @@
  * and open the template in the editor.
  */
 package elements;
-import control.GameScreen;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 /**
  *
  * @author giova
  */
-public class Peca {                     //Criando a Classe que repesenta os elementos do Tetris, através da biblioteca gráfica JavaFX
-    private Componente a, b, c, d;      //Cada objeto do tipo Componente é um componente da peça, dessa forma, todas as peças possuem 4 retangulos, onde diferem apenas na disposição desses elementos
+public class Peca {                     //Criando a classe que repesenta as peças do tetris
+    private Componente a, b, c, d;      //Cada objeto do tipo Componente é um elemento da peça, dessa forma, todas as peças possuem 4 retangulos, onde diferem apenas na disposição desses elementos
     private char nome;                  //Nome da variável de acordo com o seu formato
 
     public Peca(Componente a, Componente b, Componente c, Componente d, char nome) //Construtor para a peca
@@ -23,6 +20,7 @@ public class Peca {                     //Criando a Classe que repesenta os elem
         this.d = d;
         this.nome = nome;
     }
+    //Métodos para acessar os atributos privados
     public Componente getA() 
     {
         return a;
