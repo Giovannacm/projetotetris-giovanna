@@ -452,10 +452,16 @@ public class GameController {
             else if(elemento.getY() < linha * TamRec && (!Tela[(int)elemento.getY()/TamRec][(int)elemento.getX()/TamRec].isFixa())) //Se esse retangulo está antes da linha a ser eliminada e não é um obstáculo, eles devem "descer"
             {
                 //O elemento deve descer apenas se, caso tenha um elemento em baixo, ele não deve ser um obstáculo, ou seja, não deve ser fixo
-                if((Tela[(int)elemento.getY()/TamRec + 1][(int)elemento.getX()/TamRec]==null) ||(Tela[(int)elemento.getY()/TamRec + 1][(int)elemento.getX()/TamRec]!=null && !Tela[(int)elemento.getY()/TamRec + 1][(int)elemento.getX()/TamRec].isFixa()))
+                //if((Tela[(int)elemento.getY()/TamRec + 1][(int)elemento.getX()/TamRec]==null) ||(Tela[(int)elemento.getY()/TamRec + 1][(int)elemento.getX()/TamRec]!=null && !Tela[(int)elemento.getY()/TamRec + 1][(int)elemento.getX()/TamRec].isFixa()))
+                if(!temObstaculoNaColuna((int)elemento.getX()/TamRec))
                 {
                     Tela[(int)elemento.getY()/TamRec][(int)elemento.getX()/TamRec] = null;  //A posição correspondente na matriz recebe null, pois ele é removido dessa posição na matriz, irá para a próxima linha
                     elemento.setY(elemento.getY() + TamRec);          //O valor de Y é mudado (pois o retangulo irá descer)
+                }
+                else
+                {
+                    System.out.println("Tem obstáculo na coluna: "+(int)elemento.getX()/TamRec);
+                    System.out.println("Não vai ficar espaço em baixo");
                 }
                 Componente c = new Componente(TamRec-1, TamRec-1, false);          //Criação um componente não obstáculo
                 c.setR(elemento);                                                  //Dando set no retangulo do componente para esse novo retangulo
@@ -473,6 +479,18 @@ public class GameController {
             elemento = comp.getR();             //Pegando o retangulo desse elemento
             Tela[(int)elemento.getY()/TamRec][(int)elemento.getX()/TamRec] = comp; //Colocando esse componente na posição correspondente (o valor de Y foi mudado anteriormente, se ele não é obstáculo)
 	}
+    }
+    public static boolean temObstaculoNaColuna(int j)
+    {
+        for(int i=0 ; i<LMatriz ; i++)
+        {
+            if(Tela[i][j]!=null)
+            {
+                if(Tela[i][j].isFixa())
+                    return true;
+            }
+        }
+        return false;
     }
 
     
