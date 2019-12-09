@@ -9,17 +9,18 @@ import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
 /**
- *
- * @author giova
+ * Projeto Tetris - POO 2019.
+ * Aluna: Giovanna Carreira Marinho
+ * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
  */
-public class Componente {       //Classe que será utilizada para representar cada elemento da peça
+public class Componente {       //Classe que será utilizada para representar cada elemento da peça (Reescrita da classe Element)
     private Rectangle r;        //Possui um retangulo (JavaFx)
-    private boolean fixa;       //E uma variável booleana que indica se esse componente é fixo ou não (dessa forma, conseguimos diferenciar peca=false e obstaculo=true)
+    private boolean fixo;       //E uma variável booleana que indica se esse componente é fixo ou não (dessa forma, conseguimos diferenciar peca=false e obstaculo=true)
     
-    public Componente(int largura, int altura, boolean fixa)    //Construtor para o componente
+    public Componente(int largura, int altura, boolean fixo)    //Construtor para o componente
     {
-        this.r = new Rectangle(largura, altura);
-        this.fixa = fixa;
+        this.r = new Rectangle(largura, altura);    //Instanciando um objeto Rectangle (JavaFX)
+        this.fixo = fixo;
     }
     //Métodos de acesso/modificação dos atributos privados da classe, assim como as propriedades do objeto do tipo Rectangle (JavaFx)
     public Rectangle getR() 
@@ -30,25 +31,21 @@ public class Componente {       //Classe que será utilizada para representar ca
     {
         this.r = r;
     }
-    public boolean isFixa() 
+    public boolean isFixo() 
     {
-        return fixa;
-    }
-    public void setFixa(boolean fixa) 
-    {
-        this.fixa = fixa;
+        return fixo;
     }
     public void setX(int x)
     {
         this.r.setX(x);
     }
-    public void setY(int y)
-    {
-        this.r.setY(y);
-    }
     public int getX()
     {
         return((int)this.r.getX());
+    }
+    public void setY(int y)
+    {
+        this.r.setY(y);
     }
     public int getY()
     {
