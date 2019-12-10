@@ -17,6 +17,8 @@ import javafx.scene.shape.Rectangle;
  * Projeto Tetris - POO 2019.
  * Aluna: Giovanna Carreira Marinho
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
+ * 
+ * Uso da classe GameController do template. Os métodos são estáticos (por consequência os atributos também) pois não será feito instanciação de GameController nas classes para uso dos métodos.
  */
 public class GameController {
     //Uso das constantes da classe Consts, dos atributos do GameScreen e atibutos para controle do jogo
@@ -135,7 +137,7 @@ public class GameController {
         {
             Componente obstaculo = new Componente(Consts.TamRec-1, Consts.TamRec-1, true);    //True pois é fixo, ou seja, é obstáculo
             obstaculo.setX(valorAleatorio.nextInt(Consts.CMatriz) * Consts.TamRec);
-            obstaculo.setY(valorAleatorio.nextInt(Consts.LMatriz-5) * Consts.TamRec + 5 * Consts.TamRec); //Evita que a peça fique muito em cima
+            obstaculo.setY(valorAleatorio.nextInt(Consts.LMatriz-6) * Consts.TamRec + 6*Consts.TamRec); //Evita que o obstaculo fique muito em cima (será colocada a partir da linha 6
             obstaculo.mudaCor(Color.BLACK);
             pane.getChildren().addAll(obstaculo.getR());                            //Adicionando os retangulos desse componente no pane
             Tela[obstaculo.getY() / Consts.TamRec][obstaculo.getX() / Consts.TamRec] = obstaculo; //Colocando esse componente em sua respectiva posição na matriz
@@ -354,12 +356,13 @@ public class GameController {
                 }
                 else if(temObstaculoNaColuna((int)elemento.getX()/Consts.TamRec))  //Se tiver obstáculo na coluna, é analisado os casos em relação ao obstáculo
                 {
-                    if(linhaDoObstaculo((int)elemento.getX()/Consts.TamRec)<linha && (int)elemento.getY()/Consts.TamRec < linha && (int)elemento.getY()/Consts.TamRec > linhaDoObstaculo((int)elemento.getX()/Consts.TamRec)) //Se o obstáculo está acima da linha a ser removida pode descer sem restrição
+                    int linhaObstaculo = linhaDoObstaculo((int)elemento.getX()/Consts.TamRec);
+                    if(linhaObstaculo<linha && (int)elemento.getY()/Consts.TamRec>linhaObstaculo) //Se o obstáculo está antes da linha a ser removida, pode descer os elementos que estão abaixo do obstáculo
                     {
                         Tela[(int)elemento.getY()/Consts.TamRec][(int)elemento.getX()/Consts.TamRec] = null;  //A posição correspondente na matriz recebe null, pois ele é removido dessa posição na matriz, irá para a próxima linha
                         elemento.setY(elemento.getY() + Consts.TamRec);          //O valor de Y é mudado (pois o retangulo irá descer)
                     }
-                    else if(linhaDoObstaculo((int)elemento.getX()/Consts.TamRec)>linha && (int)elemento.getY()/Consts.TamRec < linha && (int)elemento.getY()/Consts.TamRec < linhaDoObstaculo((int)elemento.getX()/Consts.TamRec))    //Se o obstáculo está abaixo do elemento, só pode descer os elemntos se a linha a ser removida não é do obstáculo
+                    else if(linhaObstaculo>linha  && (int)elemento.getY()/Consts.TamRec<linhaObstaculo)    //Se o obstáculo está depois da linha a ser removida, pode descer os elementos que estão antes da linha
                     {
                         Tela[(int)elemento.getY()/Consts.TamRec][(int)elemento.getX()/Consts.TamRec] = null;  //A posição correspondente na matriz recebe null, pois ele é removido dessa posição na matriz, irá para a próxima linha
                         elemento.setY(elemento.getY() + Consts.TamRec);          //O valor de Y é mudado (pois o retangulo irá descer)

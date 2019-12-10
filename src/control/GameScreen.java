@@ -7,11 +7,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -22,6 +19,10 @@ import utils.Drawing;
  * Projeto Tetris - POO 2019.
  * Aluna: Giovanna Carreira Marinho
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
+ * 
+ * Uso da classe GameScreen do template, extende Application pois é uma aplicação JavaFx, logo deve implementar o método start.
+ * Os métodos são estáticos (por consequência os atributos também) pois não será feito instanciação de GameScreen nas classes para uso dos métodos.
+ * A única instância da classe é feita na classe Main
  */
 public class GameScreen extends Application {
     private static GameScreen Instance;         //Atributo para o padrão singleton
@@ -30,6 +31,7 @@ public class GameScreen extends Application {
     private static Peca peca, proxPeca;         //peca armazena a peça atual e proxPeca armazena a próxima peça do jogo
     private static Componente[][]Tela;          //Matriz lógica de componentes que representa a tela do jogo
     private static Timer timer;                 //Representa o "agendador" de tarefas (JavaFx)
+    private static TimerTask task;              //Representa a tarefa a ser agendada
 
     /**
      * Construtor sem parametros para a classe GameScreen.
@@ -42,11 +44,13 @@ public class GameScreen extends Application {
         pane.setStyle("-fx-background-color: White");
         Tela = new Componente[Consts.LMatriz][Consts.CMatriz];
         timer = new Timer();
+        task = null;
     }
     
     
     /**
      * Método getInstance para implementação do padrão Singleton.
+     * GameScreen é instanciado na classe Main.
      * @return a única instancia de GameScreen
      */
     public static GameScreen getInstance()
@@ -84,8 +88,10 @@ public class GameScreen extends Application {
         pane.getChildren().addAll(peca.getA().getR(), peca.getB().getR(), peca.getC().getR(), peca.getD().getR()); //Adicionando no pane
         GameController.moverTeclaPressionada(peca);                 //Chamando o método do GameController responsável por ler o teclado e por meio dessa leitura verificar o que será feito com a peça
         proxPeca = GameController.proximaPeca();                    //Guardando a proxima peça
-        Drawing.mostraProximaPeca(proxPeca, scene, pane);                                //Chamando o método para mostrar a proxima peca
-	TimerTask task = new TimerTask()    //Representa a tarefa a ser agendada. É uma classe abstrata que implementa a interface Runnable, assim, devemos criar uma sub-classe que implemente o método run()
+        Drawing.mostraProximaPeca(proxPeca, scene, pane);           //Chamando o método para mostrar a proxima peca
+        if(task != null)
+            task.cancel();
+        task = new TimerTask()    //Representa a tarefa a ser agendada. É uma classe abstrata que implementa a interface Runnable, assim, devemos criar uma sub-classe que implemente o método run()
         {
             public void run() 
             {
@@ -99,7 +105,7 @@ public class GameScreen extends Application {
                             pane.getChildren().addAll(peca.getA().getR(), peca.getB().getR(), peca.getC().getR(), peca.getD().getR());  //Adicionando no pane
                             GameController.moverTeclaPressionada(peca); //Verficando o que será feito com a peça
                             proxPeca = GameController.proximaPeca();    //Guardando a proxima peça para a próxima iteração
-                            Drawing.mostraProximaPeca(proxPeca, scene, pane);                //Chamando o método para mostrar a proxima peça
+                            Drawing.mostraProximaPeca(proxPeca, scene, pane);  //Chamando o método para mostrar a proxima peça
                         }
                         if(GameController.topo()==0)    //Se o topo for 0, o jogo acaba
                         {

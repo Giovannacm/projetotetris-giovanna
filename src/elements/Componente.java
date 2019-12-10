@@ -12,6 +12,10 @@ import javafx.scene.shape.Rectangle;
  * Projeto Tetris - POO 2019.
  * Aluna: Giovanna Carreira Marinho
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
+ * 
+ * Reescrita da classe Element do template. Não é abstrata pois essa classe é um "molde" para cada componente de uma peça do jogo, logo será instanciada.
+ * Como o atributo r (Rectangle do JavaFx) já possui sua posição, a classe Position do template não foi utilizada, uma vez que já está sendo utilizado as propriedades desse objeto do JavaFx.
+ * Os métodos de manupulação de sua posição já estão incluidos nessa classe.
  */
 public class Componente {       //Classe que será utilizada para representar cada elemento da peça (Reescrita da classe Element)
     private Rectangle r;        //Possui um retangulo (JavaFx)

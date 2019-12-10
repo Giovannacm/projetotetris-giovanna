@@ -13,12 +13,15 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
+import javafx.stage.Stage; 
 
 /**
  * Projeto Tetris - POO 2019.
  * Aluna: Giovanna Carreira Marinho
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
+ * 
+ * Usando a classe do template responsável por desenhar o cenário do jogo, exibir o menu e a proxima peça, ou seja, utilizada para desenhar o cenário.
+ * Os métodos são estáticos (por consequência os atributos também) pois não será feito instanciação de Drawing nas classes para uso dos métodos.
  */
 public class Drawing {
     private static Text pontuacaoTexto = new Text("Pontuação: " + Integer.toString(GameController.getPontuacao())); //Esse texto irá mudar toda vez que a pontuação for alterada
@@ -79,6 +82,9 @@ public class Drawing {
             @Override
             public void handle(ActionEvent event) 
             {
+                GameController.setPontuacao(0);
+                GameController.setGravidade(1);
+                timer.purge();
                 pane.getChildren().clear();
                 menu(primaryStage, timer, scene, pane);
             }

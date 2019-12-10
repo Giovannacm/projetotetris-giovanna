@@ -14,6 +14,8 @@ import utils.Drawing;
  * Projeto Tetris - POO 2019.
  * Aluna: Giovanna Carreira Marinho
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
+ * 
+ * A classe Peca possui varios componentes, onde diferem apenas em suas posições. Como foi dito anteriormente, a classe Componente é um "molde" para cada "quadradinho" que faz parte da peça.s
  */
 public class Peca {                     //Criando a classe que repesenta as peças do tetris
     private Componente a, b, c, d;      //Cada objeto do tipo Componente é um elemento da peça, dessa forma, todas as peças possuem 4 componentes, onde diferem apenas na disposição desses elementos

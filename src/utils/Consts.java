@@ -4,6 +4,8 @@ package utils;
  * Projeto Tetris - POO 2019.
  * Aluna: Giovanna Carreira Marinho
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
+ * 
+ * Uso da classe do template para as contantes do jogo, temos que a tela é uma matriz 18x10.
  */
 public class Consts {
     public static final double Gravidade = 1;           //Velocidade inicial da peça no jogo
