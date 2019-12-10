@@ -8,9 +8,7 @@ import utils.Consts;
 import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
-import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
 
 /**
@@ -18,16 +16,18 @@ import javafx.scene.shape.Rectangle;
  * Aluna: Giovanna Carreira Marinho
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
  * 
- * Uso da classe GameController do template. Os métodos são estáticos (por consequência os atributos também) pois não será feito instanciação de GameController nas classes para uso dos métodos.
+ * Uso da classe GameController do template. 
+ * Alguns métodos foram transferidos para esta classe de modo a organizar melhor as "tarefas" que cada classe é responsável.
+ * Diferentemente do template, os métodos são estáticos (por consequência os atributos também) pois não será feito instanciação de GameController 
+ *      nas classes GameScreen e Peca (utiliza o GameController para verificar colisoes na movimentacao da peca) para uso dos métodos.
+ * Além disso, diferentemente do template, GameController possui uma instancia de GameScreen (o padrão singleton garante que a instancia seja a mesma) para uso de seus métodos.
  */
 public class GameController {
     //Uso das constantes da classe Consts, dos atributos do GameScreen e atibutos para controle do jogo
-    private static double Gravidade = Consts.Gravidade;
-    private static Componente[][]Tela = GameScreen.getTela();
-    private static Pane pane = GameScreen.getPane();
-    private static Scene scene = GameScreen.getScene();
+    private static double Gravidade = Consts.Gravidade;         //Inicialmente a gravidade recebe o valor inicial que está na classe Consts, mas durante a execução do jogo, a gravidade irá mudar
     private static int pontuacao = 0;
-    
+    private static GameScreen screen = GameScreen.getInstance();    //Possui uma instancia de GameScreen para utilizar seus métodos
+    private static Componente[][]Tela = screen.getTela();
     
     /**
      * Método responsável por gerar uma peça aleatória (de acordo com o valorAreatorio) e colocá-la na parte de cima da tela centrada no meio.
@@ -139,7 +139,7 @@ public class GameController {
             obstaculo.setX(valorAleatorio.nextInt(Consts.CMatriz) * Consts.TamRec);
             obstaculo.setY(valorAleatorio.nextInt(Consts.LMatriz-6) * Consts.TamRec + 6*Consts.TamRec); //Evita que o obstaculo fique muito em cima (será colocada a partir da linha 6
             obstaculo.mudaCor(Color.BLACK);
-            pane.getChildren().addAll(obstaculo.getR());                            //Adicionando os retangulos desse componente no pane
+            screen.getPane().getChildren().addAll(obstaculo.getR());                            //Adicionando os retangulos desse componente no pane
             Tela[obstaculo.getY() / Consts.TamRec][obstaculo.getX() / Consts.TamRec] = obstaculo; //Colocando esse componente em sua respectiva posição na matriz
         }
     }
@@ -151,7 +151,7 @@ public class GameController {
      */
     public static void moverTeclaPressionada(Peca peca)
     {
-        GameScreen.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() 
+        screen.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() 
         {
             @Override
             public void handle(KeyEvent event) 
@@ -332,7 +332,7 @@ public class GameController {
         Rectangle elemento;
         ArrayList<Node> rec = new ArrayList<Node>();
 	ArrayList<Componente> novoscomp = new ArrayList<Componente>();
-        for(Node node : pane.getChildren())         //Percorrendo os nodes da tela (gráfica)
+        for(Node node : screen.getPane().getChildren())         //Percorrendo os nodes da tela (gráfica)
         {
             if (node instanceof Rectangle)          //Adicionando os nodes que são retangulos em um arrayList
                 rec.add(node);
@@ -345,7 +345,7 @@ public class GameController {
             if(elemento.getY() == linha * Consts.TamRec && (!Tela[(int)elemento.getY()/Consts.TamRec][(int)elemento.getX()/Consts.TamRec].isFixo()))  //Se esse retangulo está na linha que será eliminada e não é fixo, ou seja, não é um obstáculo
             {
                 Tela[(int)elemento.getY()/Consts.TamRec][(int)elemento.getX()/Consts.TamRec] = null;  //A posição correspondende na matriz recebe null, pois será removido da matriz de componentes
-                pane.getChildren().remove(node);                                        //Remove o elemento da tela (gráfica)
+                screen.getPane().getChildren().remove(node);                                        //Remove o elemento da tela (gráfica)
             } 
             else if(elemento.getY() < linha * Consts.TamRec && (!Tela[(int)elemento.getY()/Consts.TamRec][(int)elemento.getX()/Consts.TamRec].isFixo())) //Se esse retangulo está antes da linha a ser eliminada e não é um obstáculo, eles devem "descer"
             {

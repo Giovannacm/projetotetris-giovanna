@@ -15,7 +15,8 @@ import utils.Drawing;
  * Aluna: Giovanna Carreira Marinho
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
  * 
- * A classe Peca possui varios componentes, onde diferem apenas em suas posições. Como foi dito anteriormente, a classe Componente é um "molde" para cada "quadradinho" que faz parte da peça.s
+ * A classe Peca possui 4 Componente, onde diferem apenas em suas posições. Como foi dito anteriormente, a classe Componente é um "molde" para cada "quadradinho" que faz parte da peça.
+ * Além disso, os métodos de mover a peça são implementados nesta classe, utilizando alguns métodos de verificação de colisão do GameController (que, como é estático, não pecisa instancià-lo nessa classe).
  */
 public class Peca {                     //Criando a classe que repesenta as peças do tetris
     private Componente a, b, c, d;      //Cada objeto do tipo Componente é um elemento da peça, dessa forma, todas as peças possuem 4 componentes, onde diferem apenas na disposição desses elementos

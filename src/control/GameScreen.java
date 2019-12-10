@@ -21,17 +21,18 @@ import utils.Drawing;
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
  * 
  * Uso da classe GameScreen do template, extende Application pois é uma aplicação JavaFx, logo deve implementar o método start.
- * Os métodos são estáticos (por consequência os atributos também) pois não será feito instanciação de GameScreen nas classes para uso dos métodos.
- * A única instância da classe é feita na classe Main
+ * Alguns métodos dessa classe foram transferidos para GameController na intenção de organizar as "funções" de cada classe no projeto.
+ * Uma observação a ser feita é que GameScreen é instanciado nas classes: Main, GameController e Drawing. O uso do padrão Singleton nessa classe foi utilizado pois é garantido que
+ *      essa instância é a mesma, dessa forma, estamos trabalhando na mesma instância.
  */
 public class GameScreen extends Application {
-    private static GameScreen Instance;         //Atributo para o padrão singleton
-    private static Pane pane;                   //Pane do JavaFx
-    private static Scene scene;                 //Scene do JavaFx
-    private static Peca peca, proxPeca;         //peca armazena a peça atual e proxPeca armazena a próxima peça do jogo
-    private static Componente[][]Tela;          //Matriz lógica de componentes que representa a tela do jogo
-    private static Timer timer;                 //Representa o "agendador" de tarefas (JavaFx)
-    private static TimerTask task;              //Representa a tarefa a ser agendada
+    private static GameScreen Instance;  //Atributo estático para o padrão singleton
+    private Pane pane;                   //Pane do JavaFx
+    private Scene scene;                 //Scene do JavaFx
+    private Componente[][]Tela;          //Matriz lógica de componentes que representa a tela do jogo
+    private Peca peca, proxPeca;         //peca armazena a peça atual e proxPeca armazena a próxima peça do jogo
+    private Timer timer;                 //Representa o "agendador" de tarefas (JavaFx)
+    private TimerTask task;              //Representa a tarefa a ser agendada
 
     /**
      * Construtor sem parametros para a classe GameScreen.
@@ -80,8 +81,10 @@ public class GameScreen extends Application {
      * @param comObstaculo
      * @param primaryStage 
      */
-    public static void tetris(boolean comObstaculo, Stage primaryStage)
+    public void tetris(boolean comObstaculo, Stage primaryStage)
     { 
+        GameController.setPontuacao(0);
+        GameController.setGravidade(1);
         if(comObstaculo)    //Verificando se a fase é com obstáculo para adicionar obstáculo
             GameController.adicionaObstaculos(new Random().nextInt(3)+1);   //A quantidade de obstáculos será um valor randomico de 1 - 3
         peca = GameController.proximaPeca();                                //Pegando a primeira peça do jogo
@@ -133,7 +136,7 @@ public class GameScreen extends Application {
     /**
      * Método para inicialização da matriz que irá armazenar os componentes (método utilizado no Drawing)
      */
-    public static void inicializaMatriz()
+    public void inicializaMatriz()
     {
         for(int i=0 ; i<Consts.LMatriz ; i++)
             for(int j=0 ; j<Consts.CMatriz ; j++)
@@ -141,15 +144,15 @@ public class GameScreen extends Application {
     }
     
     //Métodos get e set para alguns atributos de GameScreen. (São utilizados em GameController para ter acesso aos atributos de GameScreen)
-    public static Pane getPane() 
+    public Pane getPane() 
     {
         return pane;
     }
-    public static Scene getScene() 
+    public Scene getScene() 
     {
         return scene;
     }
-    public static Componente[][] getTela() 
+    public Componente[][] getTela() 
     {
         return Tela;
     }

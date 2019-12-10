@@ -13,9 +13,10 @@ import javafx.scene.shape.Rectangle;
  * Aluna: Giovanna Carreira Marinho
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
  * 
- * Reescrita da classe Element do template. Não é abstrata pois essa classe é um "molde" para cada componente de uma peça do jogo, logo será instanciada.
+ * Reescrita da classe Element do template. Não é abstrata pois essa classe é um "molde" para cada elemento de uma peça do jogo (cada peça terá 4 Componentes), logo será instanciada.
+ * Além disso, 1 Componente representa um obstáculo (acredito que não seria necessário usar uma herança de implementação para criar apenas uma classe Obstáculo), é passado true para o atributo fixo (ver método adicionaObstaculos no GameController).
  * Como o atributo r (Rectangle do JavaFx) já possui sua posição, a classe Position do template não foi utilizada, uma vez que já está sendo utilizado as propriedades desse objeto do JavaFx.
- * Os métodos de manupulação de sua posição já estão incluidos nessa classe.
+ * Os métodos de manupulação de sua posição (x e y) já estão incluidos nessa classe.
  */
 public class Componente {       //Classe que será utilizada para representar cada elemento da peça (Reescrita da classe Element)
     private Rectangle r;        //Possui um retangulo (JavaFx)

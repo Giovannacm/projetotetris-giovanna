@@ -1,6 +1,5 @@
 package utils;
 
-import control.GameController;
 import control.GameScreen;
 import elements.Componente;
 import elements.Peca;
@@ -20,13 +19,14 @@ import javafx.stage.Stage;
  * Aluna: Giovanna Carreira Marinho
  * Baseado em material do Prof. Jose Fernando Junior e Prof. Luiz Eduardo (USP)
  * 
- * Usando a classe do template responsável por desenhar o cenário do jogo, exibir o menu e a proxima peça, ou seja, utilizada para desenhar o cenário.
- * Os métodos são estáticos (por consequência os atributos também) pois não será feito instanciação de Drawing nas classes para uso dos métodos.
+ * Usando a classe do template responsável por desenhar o cenário do jogo, exibir o menu e a proxima peça, ou seja, utilizada para desenhar o cenário e métodos de exibição.
+ * Assim como no template, os métodos são estáticos (por consequência os atributos também) pois não será feito instanciação de Drawing na classe GameScreen para uso dos métodos.
  */
 public class Drawing {
-    private static Text pontuacaoTexto = new Text("Pontuação: " + Integer.toString(GameController.getPontuacao())); //Esse texto irá mudar toda vez que a pontuação for alterada
+    private static Text pontuacaoTexto = new Text("Pontuação: "); //Esse texto irá mudar toda vez que a pontuação for alterada
     private static Text faseTexto = new Text("Fase: ");             //Esse texto irá mudar futuramente dependendo da fase escolhida
     private static Peca auxiliar = null;                            //Peca auxiliar é utilizada para mostrar a próxima peca na tela
+    private static GameScreen screen = GameScreen.getInstance();    //Possui uma instancia de GameScreen para utilizar seus métodos
     
     /**
      * Método responsável por desenhar os elementos do cenário.
@@ -82,8 +82,6 @@ public class Drawing {
             @Override
             public void handle(ActionEvent event) 
             {
-                GameController.setPontuacao(0);
-                GameController.setGravidade(1);
                 timer.purge();
                 pane.getChildren().clear();
                 menu(primaryStage, timer, scene, pane);
@@ -180,7 +178,7 @@ public class Drawing {
     public static void menu(Stage primaryStage, Timer timer, Scene scene, Pane pane)
     {
         primaryStage.setTitle("Menu - Tetris");
-        GameScreen.inicializaMatriz();                     //Inicializando a tela/tabuleiro (matriz) do jogo com null
+        screen.inicializaMatriz();                     //Inicializando a tela/tabuleiro (matriz) do jogo com null
         Button faseNormal = new Button();       //Criando um botão para a fase sem obstáculo e mudando suas propriedades
         Button faseObstaculo = new Button();    //Criando um botão para a fase com obstáculo e mudando suas propriedades
         faseNormal.setLayoutX(175);
@@ -196,7 +194,7 @@ public class Drawing {
             @Override
             public void handle(ActionEvent event) {     //Quando ele for pressionado a fase sem obstaculo será apresentada
                 desenhaCenario(primaryStage, timer, scene, pane);
-                GameScreen.tetris(false, primaryStage);
+                screen.tetris(false, primaryStage);
                 pane.getChildren().remove(faseNormal);  //Removendo os botoes
                 pane.getChildren().remove(faseObstaculo);
                 setFaseTexto("Fase: sem obstáculos");    //Mudando o texto da fase atual
@@ -207,7 +205,7 @@ public class Drawing {
             @Override
             public void handle(ActionEvent event) {     //Quando ele for pressionado a fase com obstaculo será apresentada
                 desenhaCenario(primaryStage, timer, scene, pane);
-                GameScreen.tetris(true, primaryStage);
+                screen.tetris(true, primaryStage);
                 pane.getChildren().remove(faseNormal);  //Removendo os botoes
                 pane.getChildren().remove(faseObstaculo);
                 setFaseTexto("Fase: com obstáculos");    //Mudando o texto da fase atual
